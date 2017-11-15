@@ -9,7 +9,8 @@
   "scripts": {
     "eslint": "eslint --config ./.eslintrc --ext .js src",
     "flow": "flow",
-    "flowt": "flow-typed install --ignoreDeps dev && flow-typed install jest@21.2.1"
+    "flowt": "flow-typed install --ignoreDeps dev && flow-typed install jest@21.2.1",
+    "test": "jest tests/*.js"
   },
   "keywords": [
     "redux"
@@ -17,7 +18,11 @@
   "author": "Sergey Poskachey",
   "license": "ISC",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-jest": "^21.2.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
     "eslint": "^4.11.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-flowtype": "^2.39.1",
