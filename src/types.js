@@ -1,7 +1,5 @@
 /* @flow */
 
-import type { Reducer } from 'redux';
-
 // common types
 type Map<Value> = {[key: string]: Value};
 export type AnyRealValue = string | number | boolean | Object | Array<AnyRealValue> | null;
