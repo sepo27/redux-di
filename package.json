@@ -1,0 +1,23 @@
+{
+  "name": "redux-exr",
+  "version": "0.0.1",
+  "description": "Redux extended reducer",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redux"
+  ],
+  "author": "Sergey Poskachey",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "flow-bin": "^0.59.0",
+    "flow-typed": "^2.2.3",
+    "ramda": "^0.25.0"
+  }
+}
