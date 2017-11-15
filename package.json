@@ -7,11 +7,12 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "babel src --out-dir lib",
     "eslint": "eslint --config ./.eslintrc --ext .js src",
     "flow": "flow",
     "flowt": "flow-typed install --ignoreDeps dev && flow-typed install jest@21.2.1",
     "test": "jest tests/*.js",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run build",
     "precommit": "./scripts/precommit"
   },
   "keywords": [
