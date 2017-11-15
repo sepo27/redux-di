@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 
 import { exCombineReducers } from '../src/exCombineReducers';
-import type { PlainAction } from '../../../commonTypes';
+import type { PlainAction } from '../src/types';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',

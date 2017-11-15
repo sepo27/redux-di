@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable arrow-body-style */
 
-import type { AnyRealValue, PlainAction } from '../../../commonTypes';
+import type { AnyRealValue, PlainAction } from '../src/types';
 import { exCombineReducers, makePlainReducer, makeExReducer } from '../src';
 
 const
