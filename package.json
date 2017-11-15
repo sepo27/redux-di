@@ -10,7 +10,8 @@
     "eslint": "eslint --config ./.eslintrc --ext .js src",
     "flow": "flow",
     "flowt": "flow-typed install --ignoreDeps dev && flow-typed install jest@21.2.1",
-    "test": "jest tests/*.js"
+    "test": "jest tests/*.js",
+    "precommit": "./scripts/precommit"
   },
   "keywords": [
     "redux"
@@ -32,6 +33,7 @@
     "eslint-plugin-react": "^7.4.0",
     "flow-bin": "^0.59.0",
     "flow-typed": "^2.2.3",
+    "husky": "^0.14.3",
     "jest": "^21.2.1"
   },
   "dependencies": {

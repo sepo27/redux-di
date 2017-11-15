@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+# run lint if scss|ts file changes are to be committed
+if git diff-index --name-only HEAD | grep -Eq "(scss|js|jsx)$"
+then
+  echo "=== Running pre-commit lint..."
+  npm run eslint
+fi
+
+# run tests if ts|js file changes are to be committed
+if git diff-index --name-only HEAD | grep -Eq "(\.js|\.jsx)$"
+then
+  echo "=== Running pre-commit flow..."
+  npm run flow
+
+  echo "\n=== Running pre-commit tests..."
+  npm run test
+fi
+

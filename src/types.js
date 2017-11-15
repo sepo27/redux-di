@@ -8,7 +8,7 @@ export type PlainAction = {type: string};
 type Action<Payload> = {type: string; payload: Payload};
 type AnyAction = PlainAction | Action<AnyRealValue>;
 
-type Reducer<State, Action> = (state: State, action: Action) => State;
+type Reducer<State, Action> = (state: State, action: Action) => State; // eslint-disable-line no-shadow
 export type AnyActionReducer<State> = Reducer<State, AnyAction>;
 export type AnyReducer = <State: AnyRealValue>(state: State, action: AnyAction) => State;
 
