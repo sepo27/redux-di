@@ -1,6 +1,6 @@
 {
   "name": "redux-exr",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Redux extended reducer",
   "main": "lib/index.js",
   "directories": {
@@ -15,7 +15,7 @@
     "prepublish": "npm run build",
     "precommit": "./scripts/precommit"
   },
-  "repository" : "https://github.com/paska27/redux-exr",
+  "repository": "https://github.com/paska27/redux-exr",
   "keywords": [
     "redux"
   ],
