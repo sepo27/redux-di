@@ -1,9 +1,9 @@
 /* @flow */
 
-import type { AnyActionReducer, AnyRealValue } from './types';
+import type { SomeActionReducer } from './types';
 
-export const makePlainReducer = <InitState: AnyRealValue>(
-  initialState: InitState,
-  reducer: AnyActionReducer<InitState>,
-): AnyActionReducer<InitState> =>
+export const makePlainReducer = <State>(
+  initialState: State,
+  reducer: SomeActionReducer<State>,
+): SomeActionReducer<State> =>
   (state, action) => (state === undefined ? initialState : reducer(state, action));
