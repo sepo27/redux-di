@@ -6,9 +6,7 @@ const isPlainObject = (val: any): boolean /* :: %checks */ => (
   typeof val === 'object' && val !== null && !Array.isArray(val)
 );
 
-const isPlainReducer = (
-  val: PlainReducer | ExReducerCallable | ExReducerTree,
-): boolean /* :: %checks */ => (
+const isPlainReducer = (val: PlainReducer | ExReducerCallable | ExReducerTree): boolean /* :: %checks */ => (
   typeof val === 'function' && !val._exrd // eslint-disable-line no-underscore-dangle
 );
 
@@ -23,9 +21,7 @@ function isExReducer(val): boolean {
 
 const
   toArrayPath = (path: string): Array<string> => path.split('.'),
-  toStrPath = (path: Array<string>): string => path.join('.')
-  ;
-
+  toStrPath = (path: Array<string>): string => path.join('.');
 const makeError = (msg: string): Error => new Error(`exCombineReducers(): ${msg}`);
 
 const makeInitialStateError = (currentPath: Array<string>): Error => makeError(

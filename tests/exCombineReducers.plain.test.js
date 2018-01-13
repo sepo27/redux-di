@@ -6,14 +6,10 @@ import type { PlainAction } from '../src/types';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
-  DO_UPDATE_ACTION = 'DO_UPDATE_ACTION'
-  ;
-
+  DO_UPDATE_ACTION = 'DO_UPDATE_ACTION';
 const
   dummyAction = () => ({type: DUMMY_ACTION}),
-  doUpdateAction = () => ({type: DO_UPDATE_ACTION})
-  ;
-
+  doUpdateAction = () => ({type: DO_UPDATE_ACTION});
 describe('exCombineReducers() plain', () => {
   describe('with flat plain reducers', () => {
     it('should return same state if no changes', () => {
@@ -26,8 +22,7 @@ describe('exCombineReducers() plain', () => {
             action.type === DO_UPDATE_ACTION ? 'updated value' : rstate
           ),
         },
-        action = dummyAction()
-        ;
+        action = dummyAction();
       const nextState = exCombineReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
         foo: 'value',
@@ -45,8 +40,7 @@ describe('exCombineReducers() plain', () => {
             action.type === DO_UPDATE_ACTION ? 'updated value' : rstate
           ),
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const nextState = exCombineReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
         foo: 'updated value',
@@ -68,8 +62,7 @@ describe('exCombineReducers() plain', () => {
             action.type === DO_UPDATE_ACTION ? 'updated value 2' : rstate
           ),
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const nextState = exCombineReducers(reducerTree)(state, action);
       expect(nextState === state).toBeFalsy();
       expect(nextState).toEqual({
@@ -113,8 +106,7 @@ describe('exCombineReducers() plain', () => {
             ),
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       // $FlowFixMe
       const nextState: State = exCombineReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
@@ -148,8 +140,7 @@ describe('exCombineReducers() plain', () => {
             },
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
@@ -179,8 +170,7 @@ describe('exCombineReducers() plain', () => {
             },
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
@@ -208,8 +198,7 @@ describe('exCombineReducers() plain', () => {
             return (action.type === DO_UPDATE_ACTION) ? {baz: 'baz value updated'} : rstate;
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
@@ -242,8 +231,7 @@ describe('exCombineReducers() plain', () => {
             return (action.type === DO_UPDATE_ACTION) ? {...rstate, baz: 'baz value updated'} : rstate;
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
@@ -274,8 +262,7 @@ describe('exCombineReducers() plain', () => {
             },
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
@@ -309,8 +296,7 @@ describe('exCombineReducers() plain', () => {
             },
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
@@ -344,8 +330,7 @@ describe('exCombineReducers() plain', () => {
             return (action.type === DO_UPDATE_ACTION) ? {...rstate, qux: 'qux value updated'} : rstate;
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
@@ -391,8 +376,7 @@ describe('exCombineReducers() plain', () => {
             return (action.type === DUMMY_ACTION) ? {...rstate, qux: 'qux value updated'} : rstate;
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       const newState = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
@@ -471,8 +455,7 @@ describe('exCombineReducers() plain', () => {
             },
           },
         },
-        action = doUpdateAction()
-        ;
+        action = doUpdateAction();
       // $FlowFixMe
       const newState: State = exCombineReducers(reducerTree)(state, action);
       expect(newState).toEqual({

@@ -8,6 +8,7 @@ export const makeExReducer = (
   reducer: ExReducer<any>, // TODO: flow type
   // $FlowFixMe: TODO
 ): ExReducerCallable => {
+  // $FlowFixMe: TODO
   const exReducer = (state, action, dependencies) => (
     state === undefined ? initialState : reducer(state, action, dependencies)
   );

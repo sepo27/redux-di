@@ -24,9 +24,7 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
     let currentPath = [];
     const
       resolvedValues = {},
-      dependenciesCallStack = []
-      ;
-
+      dependenciesCallStack = [];
     const setResolvedValue = value => {
       resolvedValues[toStrPath(currentPath)] = value;
       return value;
@@ -118,9 +116,7 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
             if (dependencyValue === undefined) {
               const
                 dependencyReducer = rpath(toArrayPath(dependencyPathStr), tree),
-                dependencyState = rpath(toArrayPath(dependencyPathStr), rootState)
-                ;
-
+                dependencyState = rpath(toArrayPath(dependencyPathStr), rootState);
               if (!dependencyReducer) {
                 throw makeError(`Missing dependency reducer '${dependencyPathStr}' for '${toStrPath(currentPath)}'`);
               }

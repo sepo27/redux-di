@@ -6,14 +6,10 @@ import { makeExReducer, exCombineReducers, makePlainReducer } from '../src';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
-  DO_UPDATE_ACTION = 'DO_UPDATE_ACTION'
-  ;
-
+  DO_UPDATE_ACTION = 'DO_UPDATE_ACTION';
 const
   dummyAction = () => ({type: DUMMY_ACTION}),
-  doUpdateAction = () => ({type: DO_UPDATE_ACTION})
-  ;
-
+  doUpdateAction = () => ({type: DO_UPDATE_ACTION});
 describe('exCombineReducers() mixed nested', () => {
   it('should return same state if no changes', () => {
     const
@@ -33,11 +29,11 @@ describe('exCombineReducers() mixed nested', () => {
             {foo: 'foo'},
             (rstate: string, action: PlainAction, {foo}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
-            }),
+            },
+          ),
         },
       },
-      action = dummyAction()
-      ;
+      action = dummyAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value',
@@ -66,8 +62,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -96,8 +91,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value',
@@ -126,8 +120,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -157,14 +150,14 @@ describe('exCombineReducers() mixed nested', () => {
             {foo: 'foo', fox: 'fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
-            }),
+            },
+          ),
         },
         fox: (rstate: string, action: PlainAction) => {
           return action.type === DUMMY_ACTION ? `${rstate} updated` : rstate;
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -192,7 +185,8 @@ describe('exCombineReducers() mixed nested', () => {
             {foo: 'foo', fox: 'fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
-            }),
+            },
+          ),
         },
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
@@ -201,8 +195,7 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DUMMY_ACTION ? `${rstate} updated` : rstate;
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -236,11 +229,11 @@ describe('exCombineReducers() mixed nested', () => {
             {foo: 'foo', fox: 'fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
-            }),
+            },
+          ),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -268,7 +261,8 @@ describe('exCombineReducers() mixed nested', () => {
             {foo: 'foo', fox: 'fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
-            }),
+            },
+          ),
         },
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
@@ -277,8 +271,7 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -309,14 +302,14 @@ describe('exCombineReducers() mixed nested', () => {
             {foo: 'foo', fox: 'fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
-            }),
+            },
+          ),
         },
         fox: makeExReducer('initial fox', {foo: 'foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${foo}` : rstate;
         }),
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -350,8 +343,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: {
@@ -390,8 +382,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: {
@@ -433,8 +424,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       abc: 'abc value',
@@ -474,8 +464,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       abc: 'abc value updated',
@@ -515,8 +504,7 @@ describe('exCombineReducers() mixed nested', () => {
           }),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       abc: 'abc value updated',
@@ -552,8 +540,7 @@ describe('exCombineReducers() mixed nested', () => {
           )),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     expect(exCombineReducers(tree)(state, action)).toEqual({
       foo: {
         bar: 'bar value updated fox value',
@@ -590,8 +577,7 @@ describe('exCombineReducers() mixed nested', () => {
           },
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     expect(exCombineReducers(tree)(state, action)).toEqual({
       foo: {
         bar: { qux: 'qux value updated', barValue: 'bar value updated' },
@@ -618,8 +604,7 @@ describe('exCombineReducers() mixed nested', () => {
           action.type === DO_UPDATE_ACTION ? `bar1 updated ${bar}` : rstate
         )),
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     expect(exCombineReducers(tree)(state, action)).toEqual({
       bar: 'bar updated',
       bar1: 'bar1 updated bar updated',
@@ -644,8 +629,7 @@ describe('exCombineReducers() mixed nested', () => {
           )),
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     expect(exCombineReducers(tree)(state, action)).toEqual({
       foo: {
         bar: 'bar updated',
@@ -680,8 +664,7 @@ describe('exCombineReducers() mixed nested', () => {
           },
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: {
@@ -713,7 +696,8 @@ describe('exCombineReducers() mixed nested', () => {
             {baz: 'foo.baz', qux: 'fox.qux'},
             (rstate: string, action: PlainAction, {baz, qux}) => {
               return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${baz} ${qux}` : `${rstate} ${baz}`;
-            }),
+            },
+          ),
           baz: makeExReducer('initial baz', {qux: 'fox.qux'}, (rstate: string, action: PlainAction, {qux}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${qux}` : `${rstate} ${qux}`;
           }),
@@ -724,8 +708,7 @@ describe('exCombineReducers() mixed nested', () => {
           },
         },
       },
-      action = doUpdateAction()
-      ;
+      action = doUpdateAction();
     const newState = exCombineReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: {
