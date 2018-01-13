@@ -1,6 +1,6 @@
 {
   "name": "redux-exr",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Redux extended reducer",
   "main": "lib/index.js",
   "directories": {
