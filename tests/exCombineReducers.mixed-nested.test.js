@@ -10,6 +10,7 @@ const
 const
   dummyAction = () => ({type: DUMMY_ACTION}),
   doUpdateAction = () => ({type: DO_UPDATE_ACTION});
+
 describe('exCombineReducers() mixed nested', () => {
   it('should return same state if no changes', () => {
     const
@@ -26,7 +27,7 @@ describe('exCombineReducers() mixed nested', () => {
         bar: {
           baz: makeExReducer(
             'initial baz',
-            {foo: 'foo'},
+            {foo: '@foo'},
             (rstate: string, action: PlainAction, {foo}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
             },
@@ -57,7 +58,7 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
         bar: {
-          baz: makeExReducer('initial bar', {foo: 'foo'}, (rstate: string, action: PlainAction, {foo}) => {
+          baz: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
             return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
           }),
         },
@@ -86,7 +87,7 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DUMMY_ACTION ? `${rstate} updated` : rstate;
         },
         bar: {
-          baz: makeExReducer('initial baz', {foo: 'foo'}, (rstate: string, action: PlainAction, {foo}) => {
+          baz: makeExReducer('initial baz', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
             return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
           }),
         },
@@ -115,7 +116,7 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
         bar: {
-          baz: makeExReducer('initial baz', {foo: 'foo'}, (rstate: string, action: PlainAction, {foo}) => {
+          baz: makeExReducer('initial baz', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
             return `${foo} ${rstate} updated`;
           }),
         },
@@ -147,7 +148,7 @@ describe('exCombineReducers() mixed nested', () => {
         bar: {
           baz: makeExReducer(
             'initial baz',
-            {foo: 'foo', fox: 'fox'},
+            {foo: '@foo', fox: '@fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
             },
@@ -182,7 +183,7 @@ describe('exCombineReducers() mixed nested', () => {
         bar: {
           baz: makeExReducer(
             'initial baz',
-            {foo: 'foo', fox: 'fox'},
+            {foo: '@foo', fox: '@fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
             },
@@ -226,7 +227,7 @@ describe('exCombineReducers() mixed nested', () => {
         bar: {
           baz: makeExReducer(
             'initial baz',
-            {foo: 'foo', fox: 'fox'},
+            {foo: '@foo', fox: '@fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
             },
@@ -258,7 +259,7 @@ describe('exCombineReducers() mixed nested', () => {
         bar: {
           baz: makeExReducer(
             'initial baz',
-            {foo: 'foo', fox: 'fox'},
+            {foo: '@foo', fox: '@fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
             },
@@ -299,13 +300,13 @@ describe('exCombineReducers() mixed nested', () => {
         bar: {
           baz: makeExReducer(
             'initial baz',
-            {foo: 'foo', fox: 'fox'},
+            {foo: '@foo', fox: '@fox'},
             (rstate: string, action: PlainAction, {foo, fox}) => {
               return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated ${fox}` : rstate;
             },
           ),
         },
-        fox: makeExReducer('initial fox', {foo: 'foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        fox: makeExReducer('initial fox', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${foo}` : rstate;
         }),
       },
@@ -338,7 +339,7 @@ describe('exCombineReducers() mixed nested', () => {
           },
         },
         baz: {
-          fox: makeExReducer('initial fox', {bar: 'foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
+          fox: makeExReducer('initial fox', {bar: '@foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${bar}` : rstate;
           }),
         },
@@ -377,7 +378,7 @@ describe('exCombineReducers() mixed nested', () => {
           },
         },
         baz: {
-          fox: makeExReducer('initial fox', {bar: 'foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
+          fox: makeExReducer('initial fox', {bar: '@foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${bar}` : rstate;
           }),
         },
@@ -414,12 +415,12 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DUMMY_ACTION ? `${rstate} updated` : rstate;
         },
         foo: {
-          bar: makeExReducer('initial bar', {blah: 'abc'}, (rstate: string, action: PlainAction, {blah}) => {
+          bar: makeExReducer('initial bar', {blah: '@abc'}, (rstate: string, action: PlainAction, {blah}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${blah}` : rstate;
           }),
         },
         baz: {
-          fox: makeExReducer('initial fox', {bar: 'foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
+          fox: makeExReducer('initial fox', {bar: '@foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${bar}` : rstate;
           }),
         },
@@ -454,12 +455,12 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
         foo: {
-          bar: makeExReducer('initial bar', {blah: 'abc'}, (rstate: string, action: PlainAction, {blah}) => {
+          bar: makeExReducer('initial bar', {blah: '@abc'}, (rstate: string, action: PlainAction, {blah}) => {
             return action.type === DUMMY_ACTION ? `${rstate} updated ${blah}` : `${rstate} ${blah}`;
           }),
         },
         baz: {
-          fox: makeExReducer('initial fox', {bar: 'foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
+          fox: makeExReducer('initial fox', {bar: '@foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${bar}` : rstate;
           }),
         },
@@ -491,7 +492,7 @@ describe('exCombineReducers() mixed nested', () => {
       },
       reducerTree = {
         foo: {
-          bar: makeExReducer('initial bar', {blah: 'abc'}, (rstate: string, action: PlainAction, {blah}) => {
+          bar: makeExReducer('initial bar', {blah: '@abc'}, (rstate: string, action: PlainAction, {blah}) => {
             return action.type === DUMMY_ACTION ? `${rstate} updated ${blah}` : `${rstate} ${blah}`;
           }),
         },
@@ -499,7 +500,7 @@ describe('exCombineReducers() mixed nested', () => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
         baz: {
-          fox: makeExReducer('initial fox', {bar: 'foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
+          fox: makeExReducer('initial fox', {bar: '@foo.bar'}, (rstate: string, action: PlainAction, {bar}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${bar}` : rstate;
           }),
         },
@@ -530,7 +531,7 @@ describe('exCombineReducers() mixed nested', () => {
       },
       tree = {
         foo: {
-          bar: makeExReducer('initial bar', {baz: 'baz'}, (rstate: string, action: PlainAction, {baz}) => (
+          bar: makeExReducer('initial bar', {baz: '@baz'}, (rstate: string, action: PlainAction, {baz}) => (
             action.type === DO_UPDATE_ACTION ? `bar value updated ${baz.fox}` : rstate
           )),
         },
@@ -565,7 +566,7 @@ describe('exCombineReducers() mixed nested', () => {
       },
       tree = {
         foo: {
-          bar: makeExReducer({}, {fox: 'baz.fox'}, (rstate: string, action: PlainAction, {fox}) => (
+          bar: makeExReducer({}, {fox: '@baz.fox'}, (rstate: string, action: PlainAction, {fox}) => (
             action.type === DO_UPDATE_ACTION ? { ...fox, barValue: 'bar value updated' } : rstate
           )),
         },
@@ -600,7 +601,7 @@ describe('exCombineReducers() mixed nested', () => {
         bar: makePlainReducer('initial bar value', (rstate: string, action: PlainAction) => (
           action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate
         )),
-        bar1: makeExReducer('initial bar1', {bar: 'bar'}, (rstate: string, action: PlainAction, {bar}) => (
+        bar1: makeExReducer('initial bar1', {bar: '@bar'}, (rstate: string, action: PlainAction, {bar}) => (
           action.type === DO_UPDATE_ACTION ? `bar1 updated ${bar}` : rstate
         )),
       },
@@ -624,7 +625,7 @@ describe('exCombineReducers() mixed nested', () => {
           bar: makePlainReducer('initial bar value', (rstate: string, action: PlainAction) => (
             action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate
           )),
-          bar1: makeExReducer('initial bar1', {bar: 'foo.bar'}, (rstate: string, action: PlainAction, {bar}) => (
+          bar1: makeExReducer('initial bar1', {bar: '@foo.bar'}, (rstate: string, action: PlainAction, {bar}) => (
             action.type === DO_UPDATE_ACTION ? `bar1 updated ${bar}` : rstate
           )),
         },
@@ -651,10 +652,10 @@ describe('exCombineReducers() mixed nested', () => {
       },
       reducerTree = {
         foo: {
-          bar: makeExReducer('initial bar', {baz: 'foo.baz'}, (rstate: string, action: PlainAction, {baz}) => {
+          bar: makeExReducer('initial bar', {baz: '@foo.baz'}, (rstate: string, action: PlainAction, {baz}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${baz}` : `${rstate} ${baz}`;
           }),
-          baz: makeExReducer('initial baz', {qux: 'fox.qux'}, (rstate: string, action: PlainAction, {qux}) => {
+          baz: makeExReducer('initial baz', {qux: '@fox.qux'}, (rstate: string, action: PlainAction, {qux}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${qux}` : `${rstate} ${qux}`;
           }),
         },
@@ -693,12 +694,12 @@ describe('exCombineReducers() mixed nested', () => {
         foo: {
           bar: makeExReducer(
             'initial bar',
-            {baz: 'foo.baz', qux: 'fox.qux'},
+            {baz: '@foo.baz', qux: '@fox.qux'},
             (rstate: string, action: PlainAction, {baz, qux}) => {
               return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${baz} ${qux}` : `${rstate} ${baz}`;
             },
           ),
-          baz: makeExReducer('initial baz', {qux: 'fox.qux'}, (rstate: string, action: PlainAction, {qux}) => {
+          baz: makeExReducer('initial baz', {qux: '@fox.qux'}, (rstate: string, action: PlainAction, {qux}) => {
             return action.type === DO_UPDATE_ACTION ? `${rstate} updated ${qux}` : `${rstate} ${qux}`;
           }),
         },
@@ -717,6 +718,72 @@ describe('exCombineReducers() mixed nested', () => {
       },
       fox: {
         qux: 'qux value updated',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+  });
+
+  it('should resolve relative dependency path', () => {
+    const
+      state = {
+        foo: {
+          bar: 'bar',
+          baz: 'baz',
+        },
+      },
+      reducerTree = {
+        foo: {
+          bar: makeExReducer('initial bar', {baz: '^baz'}, (rstate: string, action: PlainAction, {baz}) => {
+            return `${rstate} ${baz}`;
+          }),
+          baz: makePlainReducer('initial baz', (rstate: string, action: PlainAction) => {
+            return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
+          }),
+        },
+      },
+      action = doUpdateAction();
+
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: {
+        bar: 'bar baz updated',
+        baz: 'baz updated',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+  });
+
+  it('should resolve relative dependency path #2', () => {
+    const
+      state = {
+        foo: {
+          bar: 'bar',
+          baz: {
+            fox: 'fox value',
+          },
+        },
+      },
+      reducerTree = {
+        foo: {
+          bar: makePlainReducer('initial bar', (rstate: string, action: PlainAction) => {
+            return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
+          }),
+          baz: {
+            fox: makeExReducer('initial fox', {bar: '^^bar'}, (rstate: string, action: PlainAction, {bar}) => {
+              return `${rstate} ${bar}`;
+            }),
+          },
+        },
+      },
+      action = doUpdateAction();
+
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: {
+        bar: 'bar updated',
+        baz: {
+          fox: 'fox value bar updated',
+        },
       },
     });
     expect(newState === state).toBeFalsy();

@@ -15,8 +15,9 @@ import {
   isPlainReducer,
   makeCircularDependencyError,
   makeError,
-  toArrayPath,
-  toStrPath,
+  resolveToAbsolutePath,
+  resolveToAbsoluteStrPath,
+  toAbsoluteStrPath,
 } from './utils';
 
 export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { // eslint-disable-line arrow-body-style
@@ -25,8 +26,9 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
     const
       resolvedValues = {},
       dependenciesCallStack = [];
+
     const setResolvedValue = value => {
-      resolvedValues[toStrPath(currentPath)] = value;
+      resolvedValues[toAbsoluteStrPath(currentPath)] = value;
       return value;
     };
 
@@ -36,7 +38,7 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
     ): any => {
       if (isPlainObject(reducerOrTree)) {
         if (rootState !== undefined && !isPlainObject(state)) {
-          const path = currentPath.length ? `${toStrPath(currentPath)}` : '[root]';
+          const path = currentPath.length ? `${toAbsoluteStrPath(currentPath)}` : '[root]';
           throw makeError(`Expecting state at '${path}' to be object`);
         }
 
@@ -46,29 +48,29 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
           currentPath.push(key);
 
           // $FlowFixMe: TODO: check is done outside function ?
-          let keyState;
+          let levelState;
           if (rootState === undefined) {
-            keyState = undefined;
+            levelState = undefined;
           } else {
             // $FlowFixMe: TODO: check is done outside function ?
             if (state[key] === undefined) {
               throw makeError(
-                `Got undefined previous state for '${toStrPath(currentPath)}'. This should never happen.`,
+                `Got undefined previous state for '${toAbsoluteStrPath(currentPath)}'. This should never happen.`,
               );
             }
-            keyState = state[key];
+            levelState = state[key];
           }
 
-          if (rootState !== undefined && resolvedValues[toStrPath(currentPath)] !== undefined) {
+          if (rootState !== undefined && resolvedValues[toAbsoluteStrPath(currentPath)] !== undefined) {
             // value is already resolved during this digest; only call reducer once
-            newState[key] = resolvedValues[toStrPath(currentPath)];
+            newState[key] = resolvedValues[toAbsoluteStrPath(currentPath)];
           } else {
             // $FlowFixMe: TODO
-            newState[key] = rreduce(reducerOrTree[key], keyState);
+            newState[key] = rreduce(reducerOrTree[key], levelState);
           }
 
           // $FlowFixMe: TODO: check is done outside function ?
-          stateChanged = stateChanged || newState[key] !== keyState;
+          stateChanged = stateChanged || newState[key] !== levelState;
 
           currentPath.pop();
         });
@@ -85,11 +87,12 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
         }
         return setResolvedValue(value);
       } else if (isExReducer(reducerOrTree)) {
-        if (dependenciesCallStack.indexOf(toStrPath(currentPath)) !== -1) {
-          throw makeCircularDependencyError([...dependenciesCallStack, toStrPath(currentPath)]);
-        }
+        const currentAbsoluteStrPath = toAbsoluteStrPath(currentPath);
 
-        dependenciesCallStack.push(toStrPath(currentPath));
+        if (dependenciesCallStack.indexOf(currentAbsoluteStrPath) !== -1) {
+          throw makeCircularDependencyError([...dependenciesCallStack, currentAbsoluteStrPath]);
+        }
+        dependenciesCallStack.push(currentAbsoluteStrPath);
 
         let value;
 
@@ -101,35 +104,41 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
 
           // validate dependenciesSpec
           Object.keys(dependenciesSpec).forEach(name => {
-            const dependencyPathStr = dependenciesSpec[name];
-            if (toStrPath(currentPath).indexOf(dependencyPathStr + '.') === 0) { // eslint-disable-line prefer-template
-              throw makeCircularDependencyError([toStrPath(currentPath), dependencyPathStr]);
-            } else if (dependenciesCallStack.indexOf(dependencyPathStr) !== -1) {
-              throw makeCircularDependencyError([...dependenciesCallStack, dependencyPathStr]);
+            const
+              dependencyStrPath = dependenciesSpec[name],
+              dependencyAbsoluteStrPath = resolveToAbsoluteStrPath(dependencyStrPath, currentPath);
+            if (currentAbsoluteStrPath.indexOf(dependencyAbsoluteStrPath + '.') === 0) { // eslint-disable-line prefer-template
+              throw makeCircularDependencyError([toAbsoluteStrPath(currentPath), dependencyStrPath]);
+            } else if (dependenciesCallStack.indexOf(dependencyAbsoluteStrPath) !== -1) {
+              throw makeCircularDependencyError([...dependenciesCallStack, dependencyStrPath]);
             }
           });
 
           const dependencies = Object.keys(dependenciesSpec).reduce((acc, dependencyName) => {
-            const dependencyPathStr = dependenciesSpec[dependencyName];
+            const
+              dependencyStrPath = dependenciesSpec[dependencyName],
+              dependencyAbsoluteStrPath = resolveToAbsoluteStrPath(dependencyStrPath, currentPath),
+              dependencyAbsolutePath = resolveToAbsolutePath(dependencyStrPath, currentPath);
 
-            let dependencyValue = resolvedValues[dependencyPathStr];
+            let dependencyValue = resolvedValues[dependencyAbsoluteStrPath];
             if (dependencyValue === undefined) {
               const
-                dependencyReducer = rpath(toArrayPath(dependencyPathStr), tree),
-                dependencyState = rpath(toArrayPath(dependencyPathStr), rootState);
+                dependencyReducer = rpath(dependencyAbsolutePath, tree),
+                dependencyState = rpath(dependencyAbsolutePath, rootState);
+
               if (!dependencyReducer) {
-                throw makeError(`Missing dependency reducer '${dependencyPathStr}' for '${toStrPath(currentPath)}'`);
+                throw makeError(`Missing dependency reducer '${dependencyStrPath}' for '${currentAbsoluteStrPath}'`);
               }
 
               const tempCurrentPath = currentPath;
-              currentPath = toArrayPath(dependencyPathStr);
+              currentPath = dependencyAbsolutePath;
               // $FlowFixMe: TODO
               dependencyValue = rreduce(dependencyReducer, dependencyState);
               currentPath = tempCurrentPath;
 
               if (dependencyValue === undefined) {
                 throw makeError(
-                  `Could not resolve dependency '${dependencyName}' for ex reducer '${toStrPath(currentPath)}'`,
+                  `Could not resolve dependency '${dependencyName}' for ex reducer '${currentAbsoluteStrPath}'`,
                 );
               }
             }

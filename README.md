@@ -25,7 +25,10 @@ const rootReducer = exCombineReducers(reducerTree);
 
 Key features:
 - all depedencies are resolved in one cycle for one action
-- depedency paths are absolute paths from any place in tree to root state (#1 to introduce relative paths)
+- dependency paths formats:
+  - `@some.path`:  absolute path from any place in tree to root state
+  - `^sibling.path`: path to sibling branch
+  - `^^parentSibling.path`: path to parent's sibling branch
 - dependent ex reducers and plain reducers can be mixed in any order
 
 Limitations:

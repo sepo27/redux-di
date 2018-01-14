@@ -7,9 +7,11 @@ import type { PlainAction } from '../src/types';
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
   DO_UPDATE_ACTION = 'DO_UPDATE_ACTION';
+
 const
   dummyAction = () => ({type: DUMMY_ACTION}),
   doUpdateAction = () => ({type: DO_UPDATE_ACTION});
+
 describe('exCombineReducers() plain', () => {
   describe('with flat plain reducers', () => {
     it('should return same state if no changes', () => {
