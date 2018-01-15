@@ -9,8 +9,8 @@ export const makeExReducer = (
   // $FlowFixMe: TODO
 ): ExReducerCallable => {
   // $FlowFixMe: TODO
-  const exReducer = (state, action, dependencies) => (
-    state === undefined ? initialState : reducer(state, action, dependencies)
+  const exReducer = (state, action, dependencies, changes) => (
+    state === undefined ? initialState : reducer(state, action, dependencies, changes)
   );
   exReducer._exrd = dependenciesSpec; // eslint-disable-line no-param-reassign, no-underscore-dangle
   return exReducer;

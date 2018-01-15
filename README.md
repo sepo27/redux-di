@@ -10,11 +10,23 @@ const reducerTree = {
   foo: makePlainReducer('initial foo', (state, action) => (
     action.type === 'UPDATE_ACTION' ? 'foo updated' : state
   )),
-  bar: makeExReducer('initial foo', {foo: 'foo', fox: 'baz.fox '}, (state, action) => (
-    action.type === 'UPDATE_ACTION' ? `${foo} bar updated` : action
-  )),
+  bar: makeExReducer(
+    'initial foo',
+    {foo: '@foo', fox: '@baz.fox'},
+    (state, action, {foo, fox}, changes: ExReducerDependenciesChanges) => {
+        if (changes.for('foo')) return foo;
+        else if (changes.for('fox')) return fox;
+        return state;
+    }
+  ),
   baz: {
-    fox: makeExReducer('initial state', {foo: 'foo'})
+    fox: makeExReducer(
+        'initial state',
+        {foo: '@foo'},
+        (state, action, {foo}, changes: ExReducerDependenciesChanges) => {
+            return changes.yes() ? foo : state;
+        }
+    )
   }
 };
 const rootReducer = exCombineReducers(reducerTree);

@@ -1,7 +1,9 @@
 /* @flow */
 
 // common types
-type Map<Value> = {[key: string]: Value};
+import { ExReducerDependenciesChanges } from './ExReducerDependenciesChanges';
+
+export type Map<Value> = {[key: string]: Value};
 export type AnyRealValue = string | number | boolean | Object | Array<AnyRealValue> | null;
 
 export type PlainAction = {type: string};
@@ -15,10 +17,20 @@ export type AnyStateReducer = <State: AnyRealValue>(state: State, action: AnyAct
 export type PlainReducer = AnyStateReducer;
 
 export type ExReducerDependenciesSpec = Object;
-export type ExReducerDependencies = Map<any>; // any to make it flexible in reducers\
-export type ExReducer<State> = (state: State, action: AnyAction, dependencies: ExReducerDependencies) => State;
+export type ExReducerDependencies = Map<any>; // any to make it flexible in reducers
+export type ExReducer<State> = (
+  state: State,
+  action: AnyAction,
+  dependencies: ExReducerDependencies,
+  changes: ExReducerDependenciesChanges,
+) => State;
 export type ExReducerCallable = {
-  <State: AnyRealValue>(state: State, action: AnyAction, dependencies: ExReducerDependencies): State;
+  <State: AnyRealValue>(
+    state: State,
+    action: AnyAction,
+    dependencies: ExReducerDependencies,
+    changes: ExReducerDependenciesChanges,
+  ): State;
   _exrd: Object;
 };
 

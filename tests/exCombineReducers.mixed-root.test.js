@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 
 import type { PlainAction } from '../src/types';
-import { exCombineReducers, makeExReducer } from '../src';
+import { exCombineReducers, ExReducerDependenciesChanges, makeExReducer, makePlainReducer } from '../src';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
@@ -260,5 +260,286 @@ describe('exCombineReducers() mixed on root level', () => {
       baz: 'foo value baz value',
     });
     expect(newState === state).toBeFalsy();
+  });
+
+  it('should update dependencies when there are changes', () => {
+    let depsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: {
+          key: 'bar value',
+        },
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makeExReducer(
+          {key: 'initial bar'},
+          {foo: '@foo'},
+          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+            depsChanges = changes;
+            if (changes.yes()) return {key: foo};
+            return rstate;
+          }),
+      },
+      action = doUpdateAction();
+
+    // assert state
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: 'foo updated',
+      bar: {
+        key: 'foo updated',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+    expect(newState.bar === state.bar).toBeFalsy();
+
+    // assert changes
+    // $FlowFixMe
+    expect(depsChanges.yes() === true).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('foo') === true).toBeTruthy();
+  });
+
+  it('should update dependencies when there are changes #2', () => {
+    let depsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: {
+          key: 'bar value',
+        },
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makeExReducer(
+          {key: 'initial bar'},
+          {foo: '@foo'},
+          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+            depsChanges = changes;
+            if (changes.for('foo')) return {key: foo};
+            return rstate;
+          }),
+      },
+      action = doUpdateAction();
+
+    // assert state
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: 'foo updated',
+      bar: {
+        key: 'foo updated',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+    expect(newState.bar === state.bar).toBeFalsy();
+
+    // assert changes
+    // $FlowFixMe
+    expect(depsChanges.yes() === true).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('foo') === true).toBeTruthy();
+  });
+
+  it('should update dependencies when there are changes #3', () => {
+    let depsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: {
+          key: 'bar value',
+        },
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makeExReducer(
+          {key: 'initial bar'},
+          {foo: '@foo'},
+          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+            depsChanges = changes;
+            if (changes.for('foo')) return {key: foo};
+            return rstate;
+          }),
+      },
+      action = dummyAction();
+
+    // assert state
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: 'foo',
+      bar: {
+        key: 'bar value',
+      },
+    });
+    expect(newState === state).toBeTruthy();
+    expect(newState.bar === state.bar).toBeTruthy();
+
+    // assert changes
+    // $FlowFixMe
+    expect(depsChanges.yes() === false).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('foo') === false).toBeTruthy();
+  });
+
+  it('should update dependencies when there are changes #4', () => {
+    let depsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: 'bar',
+        baz: {
+          key: 'baz value',
+        },
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makePlainReducer('initial bar', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate;
+        }),
+        baz: makeExReducer(
+          {key: 'initial baz'},
+          {foo: '@foo', bar: '@bar'},
+          (rstate: Object, action: PlainAction, {foo, bar}, changes: ExReducerDependenciesChanges) => {
+            depsChanges = changes;
+            if (changes.for('foo') && changes.for('bar')) return {key: `${foo} + ${bar}`};
+            return rstate;
+          }),
+      },
+      action = doUpdateAction();
+
+    // assert state
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: 'foo updated',
+      bar: 'bar updated',
+      baz: {
+        key: 'foo updated + bar updated',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+    expect(newState.bar === state.bar).toBeFalsy();
+
+    // assert changes
+    // $FlowFixMe
+    expect(depsChanges.yes() === true).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('foo') === true).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('bar') === true).toBeTruthy();
+  });
+
+  it('should update dependencies when there are changes #5', () => {
+    let depsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: 'bar',
+        baz: {
+          key: 'baz value',
+        },
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makePlainReducer('initial bar', (rstate: string, action: PlainAction) => {
+          return action.type === DUMMY_ACTION ? 'bar updated' : rstate;
+        }),
+        baz: makeExReducer(
+          {key: 'initial baz'},
+          {foo: '@foo', bar: '@bar'},
+          (rstate: Object, action: PlainAction, {foo, bar}, changes: ExReducerDependenciesChanges) => {
+            depsChanges = changes;
+            if (changes.for('foo') && changes.for('bar')) return {key: `${foo} + ${bar}`};
+            return rstate;
+          }),
+      },
+      action = doUpdateAction();
+
+    // assert state
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: 'foo updated',
+      bar: 'bar',
+      baz: {
+        key: 'baz value',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+    expect(newState.bar === state.bar).toBeTruthy();
+
+    // assert changes
+    // $FlowFixMe
+    expect(depsChanges.yes() === true).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('foo') === true).toBeTruthy();
+    // $FlowFixMe
+    expect(depsChanges.for('bar') === false).toBeTruthy();
+  });
+
+  it('should update dependencies when there are changes #6', () => {
+    let barDepsChanges, bazDepsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: 'bar',
+        baz: {
+          key: 'baz value',
+        },
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makeExReducer(
+          'initial bar',
+          {baz: '@baz'},
+          (rstate: string, action: PlainAction, {baz}, changes: ExReducerDependenciesChanges) => {
+            barDepsChanges = changes;
+            return changes.yes() ? `bar changed with: ${baz.key}` : rstate;
+          },
+        ),
+        baz: makeExReducer(
+          {key: 'initial baz'},
+          {foo: '@foo'},
+          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+            bazDepsChanges = changes;
+            if (changes.yes()) return {key: `baz changed with: ${foo}`};
+            return rstate;
+          }),
+      },
+      action = doUpdateAction();
+
+    // assert state
+    const newState = exCombineReducers(reducerTree)(state, action);
+    expect(newState).toEqual({
+      foo: 'foo updated',
+      bar: 'bar changed with: baz changed with: foo updated',
+      baz: {
+        key: 'baz changed with: foo updated',
+      },
+    });
+    expect(newState === state).toBeFalsy();
+    expect(newState.bar === state.bar).toBeFalsy();
+    expect(newState.baz === state.baz).toBeFalsy();
+
+    // assert changes
+    // $FlowFixMe
+    expect(barDepsChanges.yes() === true).toBeTruthy();
+    // $FlowFixMe
+    expect(barDepsChanges.for('baz') === true).toBeTruthy();
+    // $FlowFixMe
+    expect(bazDepsChanges.yes() === true).toBeTruthy();
+    // $FlowFixMe
+    expect(bazDepsChanges.for('foo') === true).toBeTruthy();
   });
 });

@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 
 import type { AnyRealValue, PlainAction } from '../src/types';
-import { exCombineReducers, makePlainReducer, makeExReducer } from '../src';
+import { exCombineReducers, makePlainReducer, makeExReducer, ExReducerDependenciesChanges } from '../src';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
@@ -233,6 +233,30 @@ describe('exCombineReducers() edge cases', () => {
       baz: {
         fox: 'initial fox',
       },
+    });
+  });
+
+  it('should create initial state state #5', () => {
+    const
+      state = undefined,
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makeExReducer(
+          'initial bar',
+          {foo: '@foo'},
+          (rstate: string, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+            return changes.yes() ? `bar updated ${foo}` : rstate;
+          },
+        ),
+      },
+      action = dummyAction();
+
+    // $FlowFixMe
+    expect(exCombineReducers(reducerTree)(state, action)).toEqual({
+      foo: 'initial foo',
+      bar: 'initial bar',
     });
   });
 
@@ -561,5 +585,34 @@ describe('exCombineReducers() edge cases', () => {
 
     expect(() => exCombineReducers(reducerTree)(state, action))
       .toThrowError("Absolute path '@' is invalid.");
+  });
+
+  it('should error out if changes.for() is undefined', () => {
+    let depsChanges;
+    const
+      state = {
+        foo: 'foo',
+        bar: 'bar',
+      },
+      reducerTree = {
+        foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
+          return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
+        }),
+        bar: makeExReducer(
+          {key: 'initial bar'},
+          {foo: '@foo'},
+          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+            depsChanges = changes;
+            if (changes.yes()) return foo;
+            return rstate;
+          }),
+      },
+      action = doUpdateAction();
+
+    exCombineReducers(reducerTree)(state, action);
+
+    // assert changes
+    // $FlowFixMe
+    expect(() => depsChanges.for('dummy')).toThrowError("Change for 'dummy' is undefined");
   });
 });

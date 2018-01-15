@@ -19,6 +19,7 @@ import {
   resolveToAbsoluteStrPath,
   toAbsoluteStrPath,
 } from './utils';
+import { ExReducerDependenciesChanges } from './ExReducerDependenciesChanges';
 
 export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { // eslint-disable-line arrow-body-style
   return (rootState, action) => {
@@ -114,18 +115,18 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
             }
           });
 
+          const prevDependencies = {};
+
           const dependencies = Object.keys(dependenciesSpec).reduce((acc, dependencyName) => {
             const
               dependencyStrPath = dependenciesSpec[dependencyName],
               dependencyAbsoluteStrPath = resolveToAbsoluteStrPath(dependencyStrPath, currentPath),
-              dependencyAbsolutePath = resolveToAbsolutePath(dependencyStrPath, currentPath);
+              dependencyAbsolutePath = resolveToAbsolutePath(dependencyStrPath, currentPath),
+              dependencyState = rpath(dependencyAbsolutePath, rootState);
 
             let dependencyValue = resolvedValues[dependencyAbsoluteStrPath];
             if (dependencyValue === undefined) {
-              const
-                dependencyReducer = rpath(dependencyAbsolutePath, tree),
-                dependencyState = rpath(dependencyAbsolutePath, rootState);
-
+              const dependencyReducer = rpath(dependencyAbsolutePath, tree);
               if (!dependencyReducer) {
                 throw makeError(`Missing dependency reducer '${dependencyStrPath}' for '${currentAbsoluteStrPath}'`);
               }
@@ -143,10 +144,17 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
               }
             }
 
+            prevDependencies[dependencyName] = dependencyState;
+
             return {...acc, [dependencyName]: dependencyValue};
           }, {});
 
-          value = reducerOrTree(state, action, dependencies);
+          value = reducerOrTree(
+            state,
+            action,
+            dependencies,
+            new ExReducerDependenciesChanges(prevDependencies, dependencies),
+          );
         }
 
         dependenciesCallStack.pop();
