@@ -1,4 +1,4 @@
-### 0.2.1
+### 0.3.0
 New features:
 - Introduced dependencies changes detection
 ```javascript
