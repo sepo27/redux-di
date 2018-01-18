@@ -162,7 +162,10 @@ export const exCombineReducers = (tree: ExReducerTree): ExCombinedReducer => { /
         return setResolvedValue(value);
       }
 
-      throw makeError('Invalid reducer type. Expecting plain reducer or ex reducer or tree of the former ones');
+      throw makeError(
+        `Invalid reducer type at ${toAbsoluteStrPath(currentPath)}.
+Expecting plain reducer or ex reducer or tree of the former ones`,
+      );
     };
     return rreduce(tree, rootState);
   };
