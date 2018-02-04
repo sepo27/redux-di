@@ -3,3 +3,6 @@
 
 [include]
 ../tests
+
+[options]
+include_warnings=true

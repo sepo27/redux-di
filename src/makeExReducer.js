@@ -1,15 +1,18 @@
 /* @flow */
 
-import type { ExReducer, ExReducerCallable, ExReducerDependenciesSpec, AnyRealValue } from './types';
+import type {ExReducer, ExReducerDependenciesSpec} from './types';
 
-export const makeExReducer = (
-  initialState: AnyRealValue,
+export const makeExReducer = <S, A>(
+  initialState: S,
   dependenciesSpec: ExReducerDependenciesSpec,
-  reducer: ExReducer<any>, // TODO: flow type
-  // $FlowFixMe: TODO
-): ExReducerCallable => {
-  // $FlowFixMe: TODO
-  const exReducer = (state, action, dependencies, changes) => (
+  reducer: ExReducer<S, A>,
+): ExReducer<S, A> => {
+  const exReducer = (
+    state,
+    action,
+    dependencies,
+    changes,
+  ) => (
     state === undefined ? initialState : reducer(state, action, dependencies, changes)
   );
   exReducer._exrd = dependenciesSpec; // eslint-disable-line no-param-reassign, no-underscore-dangle

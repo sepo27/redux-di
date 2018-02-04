@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { AnyRealValue, ExReducerCallable, ExReducerTree, PlainReducer } from './types';
+import type {AnyRealValue, RreduceArgument} from './types';
 
 const
   makeError = (msg: string): Error => new Error(`exCombineReducers(): ${msg}`),
@@ -22,12 +22,12 @@ const isPlainObject = (val: any): boolean /* :: %checks */ => (
   typeof val === 'object' && val !== null && !Array.isArray(val)
 );
 
-const isPlainReducer = (val: PlainReducer | ExReducerCallable | ExReducerTree): boolean /* :: %checks */ => (
+const isPlainReducer = (val: RreduceArgument): boolean /* :: %checks */ => (
   typeof val === 'function' && !val._exrd // eslint-disable-line no-underscore-dangle
 );
 
 /*::
-declare function isExReducer(val: PlainReducer | ExReducerCallable | ExReducerTree): boolean %checks ( // eslint-disable-line
+declare function isExReducer(val: RreduceArgument): boolean %checks ( // eslint-disable-line
   typeof val === 'object' && typeof val._exrd === 'object'
 );
 */

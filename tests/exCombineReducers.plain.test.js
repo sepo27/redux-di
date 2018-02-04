@@ -109,7 +109,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      // $FlowFixMe
+
       const nextState: State = exCombineReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
         foo: 'foo value',
