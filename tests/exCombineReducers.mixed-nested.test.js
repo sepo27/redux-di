@@ -395,7 +395,6 @@ describe('exCombineReducers() mixed nested', () => {
       },
     });
     expect(newState === state).toBeFalsy();
-    // $FlowFixMe: it's there
     expect(newState.foo.qux === state.foo.qux).toBeTruthy();
   });
 
@@ -566,7 +565,7 @@ describe('exCombineReducers() mixed nested', () => {
       },
       tree = {
         foo: {
-          bar: makeExReducer({}, {fox: '@baz.fox'}, (rstate: string, action: PlainAction, {fox}) => (
+          bar: makeExReducer({}, {fox: '@baz.fox'}, (rstate: {}, action: PlainAction, {fox}) => (
             action.type === DO_UPDATE_ACTION ? { ...fox, barValue: 'bar value updated' } : rstate
           )),
         },

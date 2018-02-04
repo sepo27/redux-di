@@ -9,6 +9,7 @@
   "scripts": {
     "eslint": "eslint --config ./.eslintrc --ext .js src",
     "flow": "flow status src",
+    "rflow": "flow stop src && npm run flow",
     "flowt": "flow-typed install --ignoreDeps dev && flow-typed install jest@21.2.1",
     "test": "jest tests/*.js",
     "test-one": "jest",
@@ -36,7 +37,7 @@
     "eslint-plugin-jest": "^21.3.2",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "flow-bin": "^0.63.1",
+    "flow-bin": "^0.64.0",
     "flow-typed": "^2.2.3",
     "husky": "^0.14.3",
     "jest": "^21.2.1"
