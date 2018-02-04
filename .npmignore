@@ -3,7 +3,6 @@ scripts
 src
 .babelrc
 .eslintrc
-.flowconfig
 .gitignore
 .npmignore
 .nvmrc

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "eslint": "eslint --config ./.eslintrc --ext .js src",
-    "flow": "flow",
+    "flow": "flow status src",
     "flowt": "flow-typed install --ignoreDeps dev && flow-typed install jest@21.2.1",
     "test": "jest tests/*.js",
     "test-one": "jest",
