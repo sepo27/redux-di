@@ -1,3 +1,6 @@
+### 0.4.0
+- Improved flow types
+
 ### 0.3.0
 New features:
 - Introduced dependencies changes detection
