@@ -1,8 +1,11 @@
 [libs]
 ./flow-typed
+../flow-typed-definitions/definitions
 
 [include]
 ../tests
+../flow-typed-definitions/tests
 
 [options]
+suppress_comment=\\(.\\|\n\\)*\\$\\(FlowFixMe\\|ExpectError\\)
 include_warnings=true
