@@ -16,7 +16,8 @@
     "test-one": "jest",
     "checks": "npm run eslint && npm run test",
     "build": "babel src --out-dir lib",
-    "prepublish": "npm run checks && npm run build",
+    "postinstall": "npm run flow-typed:install",
+    "prepublishOnly": "npm run checks && npm run build",
     "precommit": "./scripts/precommit"
   },
   "repository": "https://github.com/paska27/redux-exr",
