@@ -38,6 +38,12 @@
   "plugins": [
     "flowtype",
     "jest"
-  ]
+  ],
+
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": true
+    }
+  }
 }
 

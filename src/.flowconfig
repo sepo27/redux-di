@@ -1,0 +1,8 @@
+[libs]
+./flow-typed
+
+[include]
+../tests
+
+[options]
+include_warnings=true
