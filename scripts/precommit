@@ -14,7 +14,7 @@ grepTypes() {
 if grepTypes "js|jsx"
 then
   echo "=== Running pre-commit eslint..."
-  npm run lint:eslint-files `git diff-index --name-only HEAD | grep -v "/sandbox" | grep -P "\.(js|jsx)$"`
+  npm run eslint `git diff-index --name-only HEAD | grep -v "/sandbox" | grep -P "\.(js|jsx)$"`
 fi
 
 # run tests if ts|js file changes are to be committed

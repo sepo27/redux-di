@@ -3,11 +3,11 @@
 import { path as rpath } from 'ramda';
 import type {
   AnyRealValue,
-  ExReducerTree,
+  DiReducerTree,
 } from './types';
 import {
   checkInitialStateValue,
-  isExReducer,
+  isDiReducer,
   isPlainObject,
   isPlainReducer,
   makeCircularDependencyError,
@@ -16,9 +16,9 @@ import {
   resolveToAbsoluteStrPath,
   toAbsoluteStrPath,
 } from './utils';
-import { ExReducerDependenciesChanges } from './ExReducerDependenciesChanges';
+import { DiChanges } from './ExReducerDependenciesChanges';
 
-export const exCombineReducers = (tree: ExReducerTree) => <S, A>(rootState: S, action: A): S => {
+export const combineDiReducers = (tree: DiReducerTree) => <S, A>(rootState: S, action: A): S => {
   let currentPath = [];
   const
     resolvedValues = {},
@@ -80,7 +80,7 @@ export const exCombineReducers = (tree: ExReducerTree) => <S, A>(rootState: S, a
         value = reducerOrTree(state, action);
       }
       return setResolvedValue(value);
-    } else if (isExReducer(reducerOrTree)) {
+    } else if (isDiReducer(reducerOrTree)) {
       const currentAbsoluteStrPath = toAbsoluteStrPath(currentPath);
 
       if (dependenciesCallStack.indexOf(currentAbsoluteStrPath) !== -1) {
@@ -145,7 +145,7 @@ export const exCombineReducers = (tree: ExReducerTree) => <S, A>(rootState: S, a
           state,
           action,
           dependencies,
-          new ExReducerDependenciesChanges(prevDependencies, dependencies),
+          new DiChanges(prevDependencies, dependencies),
         );
       }
 

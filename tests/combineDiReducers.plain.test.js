@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable arrow-body-style */
 
-import { exCombineReducers } from '../src/exCombineReducers';
+import { combineDiReducers } from '../src/combineDiReducers';
 import type { PlainAction } from '../src/types';
 
 const
@@ -25,7 +25,7 @@ describe('exCombineReducers() plain', () => {
           ),
         },
         action = dummyAction();
-      const nextState = exCombineReducers(reducerTree)(state, action);
+      const nextState = combineDiReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
         foo: 'value',
       });
@@ -43,7 +43,7 @@ describe('exCombineReducers() plain', () => {
           ),
         },
         action = doUpdateAction();
-      const nextState = exCombineReducers(reducerTree)(state, action);
+      const nextState = combineDiReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
         foo: 'updated value',
       });
@@ -65,7 +65,7 @@ describe('exCombineReducers() plain', () => {
           ),
         },
         action = doUpdateAction();
-      const nextState = exCombineReducers(reducerTree)(state, action);
+      const nextState = combineDiReducers(reducerTree)(state, action);
       expect(nextState === state).toBeFalsy();
       expect(nextState).toEqual({
         foo: 'value',
@@ -110,7 +110,7 @@ describe('exCombineReducers() plain', () => {
         },
         action = doUpdateAction();
 
-      const nextState: State = exCombineReducers(reducerTree)(state, action);
+      const nextState: State = combineDiReducers(reducerTree)(state, action);
       expect(nextState).toEqual({
         foo: 'foo value',
         bar: {
@@ -143,7 +143,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
         bar: {
@@ -173,7 +173,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
         bar: {
@@ -201,7 +201,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
         bar: {
@@ -234,7 +234,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value updated',
         bar: {
@@ -265,7 +265,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
         bar: {
@@ -299,7 +299,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
         bar: {
@@ -333,7 +333,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
         bar: {
@@ -379,7 +379,7 @@ describe('exCombineReducers() plain', () => {
           },
         },
         action = doUpdateAction();
-      const newState = exCombineReducers(reducerTree)(state, action);
+      const newState = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
         bar: {
@@ -459,7 +459,7 @@ describe('exCombineReducers() plain', () => {
         },
         action = doUpdateAction();
       // $FlowFixMe
-      const newState: State = exCombineReducers(reducerTree)(state, action);
+      const newState: State = combineDiReducers(reducerTree)(state, action);
       expect(newState).toEqual({
         foo: 'foo value',
         bar: {

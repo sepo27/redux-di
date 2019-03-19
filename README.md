@@ -1,16 +1,16 @@
 ## Redux extended reducers
 
 ### Rationale
-A function `exCombineReducers()` handles depedency injection into reducers in tree.
+A function `combineDiReducers()` handles depedency injection into reducers in tree.
 
 ### Usage
-`exCombineReducers()` accepts reducer tree:
+`combineDiReducers()` accepts reducer tree:
 ```javascript
 const reducerTree = {
   foo: makePlainReducer('initial foo', (state, action) => (
     action.type === 'UPDATE_ACTION' ? 'foo updated' : state
   )),
-  bar: makeExReducer(
+  bar: makeDiReducer(
     'initial foo',
     {foo: '@foo', fox: '@baz.fox'},
     (state, action, {foo, fox}, changes: ExReducerDependenciesChanges) => {
@@ -20,7 +20,7 @@ const reducerTree = {
     }
   ),
   baz: {
-    fox: makeExReducer(
+    fox: makeDiReducer(
         'initial state',
         {foo: '@foo'},
         (state, action, {foo}, changes: ExReducerDependenciesChanges) => {
@@ -29,11 +29,11 @@ const reducerTree = {
     )
   }
 };
-const rootReducer = exCombineReducers(reducerTree);
+const rootReducer = combineDiReducers(reducerTree);
 ```
 - `makePlainReducer()`: returns reducer which handles initial state
-- `makeExReducer`: returns reducer which handles initial state and has dependency specification stored
-- `exCombineReducer()`: returns a root reducer, which will traverse reducers tree and handle depedency injection.
+- `makeDiReducer`: returns reducer which handles initial state and has dependency specification stored
+- `combineDiReducers()`: returns a root reducer, which will traverse reducers tree and handle depedency injection.
 
 Key features:
 - all depedencies are resolved in one cycle for one action

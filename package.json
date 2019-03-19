@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "eslint": "eslint --config ./.eslintrc --ext .js src",
+    "eslint": "eslint --config ./.eslintrc --ext .js",
     "flow": "flow status src",
     "flow-restart": "flow stop src && npm run flow",
     "flow-typed": "flow-typed install -r src --ignoreDeps dev && flow-typed install -r src jest@21.2.1",

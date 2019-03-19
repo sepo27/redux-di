@@ -1,9 +1,9 @@
 /* @flow */
 
-import type {AnyRealValue, RreduceArgument} from './types';
+import type {AnyRealValue, ReduceArgument} from './types';
 
 const
-  makeError = (msg: string): Error => new Error(`exCombineReducers(): ${msg}`),
+  makeError = (msg: string): Error => new Error(`combineDiReducers(): ${msg}`),
   // TODO: reuse logic form resolve path
   makeInitialStateError = (currentPath: Array<string>): Error => makeError(
     `Reducer "@${currentPath.join('.')}" returned undefined during initialization.
@@ -22,16 +22,16 @@ const isPlainObject = (val: any): boolean /* :: %checks */ => (
   typeof val === 'object' && val !== null && !Array.isArray(val)
 );
 
-const isPlainReducer = (val: RreduceArgument): boolean /* :: %checks */ => (
+const isPlainReducer = (val: ReduceArgument): boolean /* :: %checks */ => (
   typeof val === 'function' && !val._exrd // eslint-disable-line no-underscore-dangle
 );
 
 /*::
-declare function isExReducer(val: RreduceArgument): boolean %checks ( // eslint-disable-line
+declare function isDiReducer(val: ReduceArgument): boolean %checks ( // eslint-disable-line
   typeof val === 'object' && typeof val._exrd === 'object'
 );
 */
-function isExReducer(val): boolean {
+function isDiReducer(val): boolean {
   return typeof val === 'function' && isPlainObject(val._exrd); // eslint-disable-line no-underscore-dangle
 }
 
@@ -79,7 +79,7 @@ const checkInitialStateValue = (value: AnyRealValue | typeof undefined, currentP
 export {
   isPlainObject,
   isPlainReducer,
-  isExReducer,
+  isDiReducer,
   resolveToAbsolutePath,
   toAbsoluteStrPath,
   resolveToAbsoluteStrPath,

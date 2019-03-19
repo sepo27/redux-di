@@ -1,12 +1,12 @@
 /* @flow */
 
-import type {ExReducer, ExReducerDependenciesSpec} from './types';
+import type {DiReducer, DependenciesSpec} from './types';
 
-export const makeExReducer = <S, A>(
+export const makeDiReducer = <S, A>(
   initialState: S,
-  dependenciesSpec: ExReducerDependenciesSpec,
-  reducer: ExReducer<S, A>,
-): ExReducer<S, A> => {
+  dependenciesSpec: DependenciesSpec,
+  reducer: DiReducer<S, A>,
+): DiReducer<S, A> => {
   const exReducer = (
     state,
     action,

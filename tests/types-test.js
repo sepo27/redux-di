@@ -4,12 +4,12 @@
 import type {
   Map,
   ReducerT,
-  ExReducerT
+  DiReducerT
 } from '../src/types';
-import {ExReducerDependenciesChanges} from "../src/ExReducerDependenciesChanges";
+import {DiChanges} from "../src/ExReducerDependenciesChanges";
 import {makePlainReducer} from "../src/makePlainReducer";
-import {makeExReducer} from "../src/makeExReducer";
-import {exCombineReducers} from "../src/exCombineReducers";
+import {makeDiReducer} from "../src/makeDiReducer";
+import {combineDiReducers} from "../src/combineDiReducers";
 
 type MyState = {key: string};
 type MyAction = {type: 'MY_ACTION1'} | {type: 'MY_ACTION2', payload: string} | {type: 'MY_ACTION3', payload: number};
@@ -41,7 +41,7 @@ type MyReducer = ReducerT<MyState, MyAction>;
  * === Make ex reducer
  */
 
-const myExReducer: ExReducerT<MyState, MyAction> = makeExReducer(
+const myExReducer: DiReducerT<MyState, MyAction> = makeDiReducer(
   {key: 'string'},
   {foo: '@foo'},
   (state, action, {foo}, changes) => {
@@ -52,8 +52,8 @@ const myExReducer: ExReducerT<MyState, MyAction> = makeExReducer(
     return state;
   }
 );
-myExReducer(undefined, {type: 'MY_ACTION1'}, {}, new ExReducerDependenciesChanges({}, {}));
-myExReducer({key: 'Some key'}, {type: 'MY_ACTION1'}, {}, new ExReducerDependenciesChanges({foo: 1}, {foo: 2}));
+myExReducer(undefined, {type: 'MY_ACTION1'}, {}, new DiChanges({}, {}));
+myExReducer({key: 'Some key'}, {type: 'MY_ACTION1'}, {}, new DiChanges({foo: 1}, {foo: 2}));
 
 // $ExpectError
 // myExReducer('', {type: 'MY_ACTION1'}, {}, new ExReducerDependenciesChanges({}, {}));
@@ -65,6 +65,6 @@ myExReducer({key: 'Some key'}, {type: 'MY_ACTION1'}, {}, new ExReducerDependenci
  * === ExCombineReducers
  */
 
-const rootReducer = exCombineReducers({
-  foo: makeExReducer('', {}, (rstate, a) => (a.type === 'BLAH' ? 'blah' : rstate)),
+const rootReducer = combineDiReducers({
+  foo: makeDiReducer('', {}, (rstate, a) => (a.type === 'BLAH' ? 'blah' : rstate)),
 });

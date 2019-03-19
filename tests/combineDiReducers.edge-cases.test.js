@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 
 import type { AnyRealValue, PlainAction } from '../src/types';
-import { exCombineReducers, makePlainReducer, makeExReducer, ExReducerDependenciesChanges } from '../src';
+import { combineDiReducers, makePlainReducer, makeDiReducer, DiChanges } from '../src';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
@@ -15,7 +15,7 @@ const
 describe('exCombineReducers() edge cases', () => {
   it('should error out when invalid reducer type', () => {
     [1, 'str', true, false, NaN, null, undefined].forEach(val => expect(() =>
-      exCombineReducers({
+      combineDiReducers({
         foo: (state: string, action: PlainAction) => `${state} + ${action.type}`,
 
         bar: val,
@@ -32,7 +32,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError("Expecting state at '[root]' to be object");
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError("Expecting state at '[root]' to be object");
   });
 
   it('should error out when state at path is not an object #2', () => {
@@ -49,7 +49,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError("Expecting state at '@foo' to be object");
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError("Expecting state at '@foo' to be object");
   });
 
   it('should handle falsy state values', () => {
@@ -73,7 +73,7 @@ describe('exCombineReducers() edge cases', () => {
         baz: makePlainReducer(false, (rstate: boolean, action: PlainAction) => (
           action.type === DO_UPDATE_ACTION ? !rstate : rstate
         )),
-        fox: makeExReducer('initial fox', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => (
+        fox: makeDiReducer('initial fox', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => (
           action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate
         )),
         qux: makePlainReducer('', (rstate: string, action: PlainAction) => (
@@ -82,7 +82,7 @@ describe('exCombineReducers() edge cases', () => {
         abs: makePlainReducer({}, (rstate: Object, action: PlainAction) => (
           action.type === DO_UPDATE_ACTION ? {...rstate, key: 'updated'} : rstate
         )),
-        xyz: makeExReducer(
+        xyz: makeDiReducer(
           [],
           {baz: '@baz', foo: '@foo', bar: '@bar'},
           (rstate: Array<AnyRealValue>, action: PlainAction, {baz, foo, bar}) => (
@@ -92,7 +92,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = doUpdateAction();
 
-    expect(exCombineReducers(tree)(state, action)).toEqual({
+    expect(combineDiReducers(tree)(state, action)).toEqual({
       foo: null,
       bar: 1,
       baz: false,
@@ -108,13 +108,13 @@ describe('exCombineReducers() edge cases', () => {
       state = undefined,
       tree = {
         foo: makePlainReducer(null, (rstate: string | null) => rstate),
-        bar: makeExReducer(0, {}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        bar: makeDiReducer(0, {}, (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
         baz: makePlainReducer(false, (rstate: boolean) => rstate),
-        fox: makeExReducer('', {}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        fox: makeDiReducer('', {}, (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
       },
       action = dummyAction();
 
-    expect(exCombineReducers(tree)(state, action)).toEqual({
+    expect(combineDiReducers(tree)(state, action)).toEqual({
       foo: null,
       bar: 0,
       baz: false,
@@ -128,16 +128,16 @@ describe('exCombineReducers() edge cases', () => {
       tree = { foo: makePlainReducer(NaN, (rstate: number) => rstate) },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('NaN is invalid initial state value');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('NaN is invalid initial state value');
   });
 
   it('should error out if NaN is given as initial state value #2', () => {
     const
       state = undefined,
-      tree = { foo: makeExReducer(NaN, {}, (rstate: number) => rstate) },
+      tree = { foo: makeDiReducer(NaN, {}, (rstate: number) => rstate) },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('NaN is invalid initial state value');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('NaN is invalid initial state value');
   });
 
   it('should create initial state state', () => {
@@ -153,7 +153,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction();
 
-    expect(exCombineReducers(tree)(state, action)).toEqual({
+    expect(combineDiReducers(tree)(state, action)).toEqual({
       bar: 'initial bar',
     });
   });
@@ -168,13 +168,13 @@ describe('exCombineReducers() edge cases', () => {
             action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate
           ),
         ),
-        baz: makeExReducer('initial baz', {}, (rstate: string, action: PlainAction) => (
+        baz: makeDiReducer('initial baz', {}, (rstate: string, action: PlainAction) => (
           action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate
         )),
       },
       action = dummyAction();
 
-    expect(exCombineReducers(tree)(state, action)).toEqual({
+    expect(combineDiReducers(tree)(state, action)).toEqual({
       bar: 'initial bar',
       baz: 'initial baz',
     });
@@ -192,13 +192,13 @@ describe('exCombineReducers() edge cases', () => {
             ),
           ),
         },
-        baz: makeExReducer('initial baz', {}, (rstate: string, action: PlainAction) => (
+        baz: makeDiReducer('initial baz', {}, (rstate: string, action: PlainAction) => (
           action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate
         )),
       },
       action = dummyAction();
 
-    expect(exCombineReducers(tree)(state, action)).toEqual({
+    expect(combineDiReducers(tree)(state, action)).toEqual({
       foo: {
         bar: 'initial bar',
       },
@@ -219,14 +219,14 @@ describe('exCombineReducers() edge cases', () => {
           ),
         },
         baz: {
-          fox: makeExReducer('initial fox', {}, (rstate: string, action: PlainAction) => (
+          fox: makeDiReducer('initial fox', {}, (rstate: string, action: PlainAction) => (
             action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate
           )),
         },
       },
       action = dummyAction();
 
-    expect(exCombineReducers(tree)(state, action)).toEqual({
+    expect(combineDiReducers(tree)(state, action)).toEqual({
       foo: {
         bar: 'initial bar',
       },
@@ -243,17 +243,17 @@ describe('exCombineReducers() edge cases', () => {
         foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
         }),
-        bar: makeExReducer(
+        bar: makeDiReducer(
           'initial bar',
           {foo: '@foo'},
-          (rstate: string, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+          (rstate: string, action: PlainAction, {foo}, changes: DiChanges) => {
             return changes.yes() ? `bar updated ${foo}` : rstate;
           },
         ),
       },
       action = dummyAction();
 
-    expect(exCombineReducers(reducerTree)(state, action)).toEqual({
+    expect(combineDiReducers(reducerTree)(state, action)).toEqual({
       foo: 'initial foo',
       bar: 'initial bar',
     });
@@ -267,7 +267,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError(
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError(
       /Reducer "[^"]*" returned undefined during initialization/,
     );
   });
@@ -280,7 +280,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError(
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError(
       /Reducer "[^"]*" returned undefined during initialization/,
     );
   });
@@ -289,12 +289,15 @@ describe('exCombineReducers() edge cases', () => {
     const
       state = undefined,
       tree = {
-        foo: makePlainReducer('initial foo', (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makePlainReducer(
+          'initial foo',
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
         bar: (rstate: string, action: PlainAction) => (action.type === DO_UPDATE_ACTION ? 'state updated' : rstate),
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError(
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError(
       /Reducer "[^"]*" returned undefined during initialization/,
     );
   });
@@ -303,14 +306,17 @@ describe('exCombineReducers() edge cases', () => {
     const
       state = undefined,
       tree = {
-        foo: makePlainReducer('initial foo', (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makePlainReducer(
+          'initial foo',
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
         bar: {
           baz: (rstate: string, action: PlainAction) => (action.type === DO_UPDATE_ACTION ? 'state updated' : rstate),
         },
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError(
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError(
       /Reducer "[^"]*" returned undefined during initialization/,
     );
   });
@@ -319,11 +325,11 @@ describe('exCombineReducers() edge cases', () => {
     const
       state = undefined,
       tree = {
-        fox: makeExReducer(undefined, {}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        fox: makeDiReducer(undefined, {}, (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError(
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError(
       /Reducer "[^"]*" returned undefined during initialization/,
     );
   });
@@ -333,12 +339,16 @@ describe('exCombineReducers() edge cases', () => {
       state = undefined,
       tree = {
         foo: {
-          bar: makeExReducer(undefined, {}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+          bar: makeDiReducer(
+            undefined,
+            {},
+            (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+          ),
         },
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError(
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError(
       /Reducer "[^"]*" returned undefined during initialization/,
     );
   });
@@ -349,10 +359,14 @@ describe('exCombineReducers() edge cases', () => {
         foo: 'previous foo',
       },
       tree = {
-        foo: makeExReducer('initial foo', {bar: '@bar'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makeDiReducer(
+          'initial foo',
+          {bar: '@bar'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
       },
       action = dummyAction();
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Missing dependency reducer');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Missing dependency reducer');
   });
 
   it('should error out if dependency reducer does not exist #2', () => {
@@ -361,13 +375,17 @@ describe('exCombineReducers() edge cases', () => {
         foo: 'previous foo',
       },
       tree = {
-        foo: makeExReducer('initial foo', {bar: '@bar.baz'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makeDiReducer(
+          'initial foo',
+          {bar: '@bar.baz'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
         bar: makePlainReducer('initial bar', (rstate: string, action: PlainAction) => (
           action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate
         )),
       },
       action = dummyAction();
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Missing dependency reducer');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Missing dependency reducer');
   });
 
   it('should error out if dependency cannot be fulfilled', () => {
@@ -378,12 +396,12 @@ describe('exCombineReducers() edge cases', () => {
       },
       tree = {
         foo: makePlainReducer('initial foo', () => undefined),
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => (
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => (
           action.type === DO_UPDATE_ACTION ? `bar updated ${foo}` : rstate
         )),
       },
       action = dummyAction();
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Could not resolve dependency');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Could not resolve dependency');
   });
 
   it('should error out if circular dependency to ancestor', () => {
@@ -395,14 +413,14 @@ describe('exCombineReducers() edge cases', () => {
       },
       tree = {
         foo: {
-          bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction) => (
+          bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction) => (
             action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate
           )),
         },
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action))
+    expect(() => combineDiReducers(tree)(state, action))
       .toThrowError('Circular dependency detected');
   });
 
@@ -418,7 +436,7 @@ describe('exCombineReducers() edge cases', () => {
       tree = {
         foo: {
           bar: {
-            baz: makeExReducer('initial baz', {bar: '@foo.bar'}, (rstate: string, action: PlainAction) => (
+            baz: makeDiReducer('initial baz', {bar: '@foo.bar'}, (rstate: string, action: PlainAction) => (
               action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate
             )),
           },
@@ -426,7 +444,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Circular dependency detected');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Circular dependency detected');
   });
 
   it('should error out if circular dependency to itself', () => {
@@ -435,11 +453,15 @@ describe('exCombineReducers() edge cases', () => {
         foo: 'foo value',
       },
       tree = {
-        foo: makeExReducer('initial foo', {foo: '@foo'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makeDiReducer(
+          'initial foo',
+          {foo: '@foo'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Circular dependency detected');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Circular dependency detected');
   });
 
   it('should error out if circular dependency to itself #2', () => {
@@ -451,12 +473,16 @@ describe('exCombineReducers() edge cases', () => {
       },
       tree = {
         foo: {
-          bar: makeExReducer('initial bar', {bar: '@foo.bar'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+          bar: makeDiReducer(
+            'initial bar',
+            {bar: '@foo.bar'},
+            (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+          ),
         },
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Circular dependency detected');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Circular dependency detected');
   });
 
   it('should error out if circular dependency chain', () => {
@@ -466,12 +492,19 @@ describe('exCombineReducers() edge cases', () => {
         bar: 'bar value',
       },
       tree = {
-        foo: makeExReducer('initial foo', {bar: '@bar'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makeDiReducer(
+          'initial foo',
+          {bar: '@bar'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
+        bar: makeDiReducer('initial bar',
+          {foo: '@foo'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Circular dependency detected');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Circular dependency detected');
   });
 
   it('should error out if circular dependency chain #2', () => {
@@ -482,13 +515,25 @@ describe('exCombineReducers() edge cases', () => {
         baz: 'baz value',
       },
       tree = {
-        foo: makeExReducer('initial foo', {bar: '@bar'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
-        bar: makeExReducer('initial bar', {baz: '@baz'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
-        baz: makeExReducer('initial bar', {foo: '@foo'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makeDiReducer(
+          'initial foo',
+          {bar: '@bar'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
+        bar: makeDiReducer(
+          'initial bar',
+          {baz: '@baz'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
+        baz: makeDiReducer(
+          'initial bar',
+          {foo: '@foo'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Circular dependency detected');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Circular dependency detected');
   });
 
   it('should error out if circular dependency chain #N', () => {
@@ -511,27 +556,43 @@ describe('exCombineReducers() edge cases', () => {
         },
       },
       tree = {
-        foo: makeExReducer('initial foo', {baz21: '@bar.baz2.baz21'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makeDiReducer(
+          'initial foo',
+          {baz21: '@bar.baz2.baz21'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+        ),
         bar: {
           baz: makePlainReducer('initial baz', (rstate: string, action: PlainAction) => (
             action.type === DO_UPDATE_ACTION ? 'baz updated' : rstate
           )),
           baz2: {
-            baz21: makeExReducer('initial baz2', {baz: '@bar.baz', fox: '@fox'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+            baz21: makeDiReducer(
+              'initial baz2',
+              {baz: '@bar.baz', fox: '@fox'},
+              (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+            ),
           },
         },
         fox: {
           qux: {
             qux2: {
-              qux21: makeExReducer('initial qux 21', {qux1: '@fox.qux.qux1'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+              qux21: makeDiReducer(
+                'initial qux 21',
+                {qux1: '@fox.qux.qux1'},
+                (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+              ),
             },
-            qux1: makeExReducer('initial qux1', {baz2: '@bar.baz2'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+            qux1: makeDiReducer(
+              'initial qux1',
+              {baz2: '@bar.baz2'},
+              (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate),
+            ),
           },
         },
       },
       action = dummyAction();
 
-    expect(() => exCombineReducers(tree)(state, action)).toThrowError('Circular dependency detected');
+    expect(() => combineDiReducers(tree)(state, action)).toThrowError('Circular dependency detected');
   });
 
   it('should error out if dependency path has invalid format', () => {
@@ -545,8 +606,12 @@ describe('exCombineReducers() edge cases', () => {
       invalidPaths = ['bar'].concat(invalidChars.split().map(ch => `${ch}bar`));
 
     invalidPaths.forEach(path => {
-      expect(() => exCombineReducers({
-        foo: makeExReducer('initial foo', {bar: path}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+      expect(() => combineDiReducers({
+        foo: makeDiReducer(
+          'initial foo',
+          {bar: path},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate), // eslint-disable-line no-shadow
+        ),
       })(state, action)).toThrowError(`Invalid path format given: '${path}'`);
     });
   });
@@ -559,11 +624,18 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction(),
       reducerTree = {
-        foo: makePlainReducer('initial foo', (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
-        bar: makeExReducer('initial bar', {foo: '^foo'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makePlainReducer(
+          'initial foo',
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate), // eslint-disable-line no-shadow
+        ),
+        bar: makeDiReducer(
+          'initial bar',
+          {foo: '^foo'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate), // eslint-disable-line no-shadow
+        ),
       };
 
-    expect(() => exCombineReducers(reducerTree)(state, action))
+    expect(() => combineDiReducers(reducerTree)(state, action))
       .toThrowError("Failed to level up for relative path '^foo'. Consider using absolute '@' notation instead");
   });
 
@@ -575,11 +647,18 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = dummyAction(),
       reducerTree = {
-        foo: makePlainReducer('initial foo', (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
-        bar: makeExReducer('initial bar', {foo: '@'}, (rstate , action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate)),
+        foo: makePlainReducer(
+          'initial foo',
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate), // eslint-disable-line no-shadow
+        ),
+        bar: makeDiReducer(
+          'initial bar',
+          {foo: '@'},
+          (rstate, action) => (action.type === DUMMY_ACTION ? DUMMY_ACTION : rstate), // eslint-disable-line no-shadow
+        ),
       };
 
-    expect(() => exCombineReducers(reducerTree)(state, action))
+    expect(() => combineDiReducers(reducerTree)(state, action))
       .toThrowError("Absolute path '@' is invalid.");
   });
 
@@ -594,10 +673,10 @@ describe('exCombineReducers() edge cases', () => {
         foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
         }),
-        bar: makeExReducer(
+        bar: makeDiReducer(
           {key: 'initial bar'},
           {foo: '@foo'},
-          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo}, changes: DiChanges) => {
             depsChanges = changes;
             if (changes.yes()) return foo;
             return rstate;
@@ -605,7 +684,7 @@ describe('exCombineReducers() edge cases', () => {
       },
       action = doUpdateAction();
 
-    exCombineReducers(reducerTree)(state, action);
+    combineDiReducers(reducerTree)(state, action);
 
     // assert changes
     expect(() => depsChanges.for('dummy')).toThrowError("Change for 'dummy' is undefined");

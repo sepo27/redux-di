@@ -1,13 +1,13 @@
 /* @flow */
 
-import type { ExReducerDependencies, Map } from './types';
+import type { Dependencies, Map } from './types';
 import { makeError } from './utils';
 
-export class ExReducerDependenciesChanges {
+export class DiChanges {
   /*::#*/changes: Map<boolean> = {};
   /*::#*/yesValue: boolean = false;
 
-  constructor(prevDeps: ExReducerDependencies, nextDeps: ExReducerDependencies) {
+  constructor(prevDeps: Dependencies, nextDeps: Dependencies) {
     Object.keys(prevDeps).forEach(prop => {
       const changed = prevDeps[prop] !== nextDeps[prop];
       this./*::#*/changes[prop] = changed;

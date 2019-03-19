@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 
 import type { PlainAction } from '../src/types';
-import { exCombineReducers, ExReducerDependenciesChanges, makeExReducer, makePlainReducer } from '../src';
+import { combineDiReducers, DiChanges, makeDiReducer, makePlainReducer } from '../src';
 
 const
   DUMMY_ACTION = 'DUMMY_ACTION',
@@ -22,12 +22,12 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
       },
       action = dummyAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState === state).toBeTruthy();
     expect(newState).toEqual({
       foo: 'foo value',
@@ -45,12 +45,12 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DUMMY_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState === state).toBeFalsy();
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -68,12 +68,12 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState === state).toBeFalsy();
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -91,12 +91,12 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DUMMY_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState === state).toBeFalsy();
     expect(newState).toEqual({
       foo: 'foo value',
@@ -111,7 +111,7 @@ describe('exCombineReducers() mixed on root level', () => {
         bar: 'bar value',
       },
       reducerTree = {
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
         foo: (rstate: string, action: PlainAction) => {
@@ -119,7 +119,7 @@ describe('exCombineReducers() mixed on root level', () => {
         },
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState === state).toBeFalsy();
     expect(newState).toEqual({
       foo: 'foo value updated',
@@ -138,15 +138,15 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
-        baz: makeExReducer('initial baz', {bar: '@bar'}, (rstate: string, action: PlainAction, {bar}) => {
+        baz: makeDiReducer('initial baz', {bar: '@bar'}, (rstate: string, action: PlainAction, {bar}) => {
           return action.type === DO_UPDATE_ACTION ? `${bar} ${rstate} updated` : rstate;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
       bar: 'foo value updated bar value updated',
@@ -163,10 +163,10 @@ describe('exCombineReducers() mixed on root level', () => {
         baz: 'baz value',
       },
       reducerTree = {
-        baz: makeExReducer('initial baz', {bar: '@bar'}, (rstate: string, action: PlainAction, {bar}) => {
+        baz: makeDiReducer('initial baz', {bar: '@bar'}, (rstate: string, action: PlainAction, {bar}) => {
           return action.type === DO_UPDATE_ACTION ? `${bar} ${rstate} updated` : rstate;
         }),
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
         foo: (rstate: string, action: PlainAction) => {
@@ -174,7 +174,7 @@ describe('exCombineReducers() mixed on root level', () => {
         },
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
       bar: 'foo value updated bar value updated',
@@ -193,12 +193,12 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return `${foo} ${rstate} updated`;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
       bar: 'foo value updated bar value updated',
@@ -217,15 +217,15 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return `${foo} ${rstate} updated`;
         }),
-        baz: makeExReducer('initial baz', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        baz: makeDiReducer('initial baz', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DO_UPDATE_ACTION ? `${foo} ${rstate} updated` : rstate;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value updated',
       bar: 'foo value updated bar value updated',
@@ -245,15 +245,15 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: (rstate: string, action: PlainAction) => {
           return action.type === DUMMY_ACTION ? `${rstate} updated` : rstate;
         },
-        bar: makeExReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        bar: makeDiReducer('initial bar', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return `${foo} ${rstate} updated`;
         }),
-        baz: makeExReducer('initial baz', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
+        baz: makeDiReducer('initial baz', {foo: '@foo'}, (rstate: string, action: PlainAction, {foo}) => {
           return action.type === DUMMY_ACTION ? `${foo} ${rstate} updated` : `${foo} ${rstate}`;
         }),
       },
       action = doUpdateAction();
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo value',
       bar: 'foo value bar value updated',
@@ -275,10 +275,10 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
         }),
-        bar: makeExReducer(
+        bar: makeDiReducer(
           {key: 'initial bar'},
           {foo: '@foo'},
-          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo}, changes: DiChanges) => {
             depsChanges = changes;
             if (changes.yes()) return {key: foo};
             return rstate;
@@ -287,7 +287,7 @@ describe('exCombineReducers() mixed on root level', () => {
       action = doUpdateAction();
 
     // assert state
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo updated',
       bar: {
@@ -317,10 +317,10 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
         }),
-        bar: makeExReducer(
+        bar: makeDiReducer(
           {key: 'initial bar'},
           {foo: '@foo'},
-          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo}, changes: DiChanges) => {
             depsChanges = changes;
             if (changes.for('foo')) return {key: foo};
             return rstate;
@@ -329,7 +329,7 @@ describe('exCombineReducers() mixed on root level', () => {
       action = doUpdateAction();
 
     // assert state
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo updated',
       bar: {
@@ -359,10 +359,10 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
         }),
-        bar: makeExReducer(
+        bar: makeDiReducer(
           {key: 'initial bar'},
           {foo: '@foo'},
-          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo}, changes: DiChanges) => {
             depsChanges = changes;
             if (changes.for('foo')) return {key: foo};
             return rstate;
@@ -371,7 +371,7 @@ describe('exCombineReducers() mixed on root level', () => {
       action = dummyAction();
 
     // assert state
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo',
       bar: {
@@ -405,10 +405,10 @@ describe('exCombineReducers() mixed on root level', () => {
         bar: makePlainReducer('initial bar', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'bar updated' : rstate;
         }),
-        baz: makeExReducer(
+        baz: makeDiReducer(
           {key: 'initial baz'},
           {foo: '@foo', bar: '@bar'},
-          (rstate: Object, action: PlainAction, {foo, bar}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo, bar}, changes: DiChanges) => {
             depsChanges = changes;
             if (changes.for('foo') && changes.for('bar')) return {key: `${foo} + ${bar}`};
             return rstate;
@@ -417,7 +417,7 @@ describe('exCombineReducers() mixed on root level', () => {
       action = doUpdateAction();
 
     // assert state
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo updated',
       bar: 'bar updated',
@@ -454,10 +454,10 @@ describe('exCombineReducers() mixed on root level', () => {
         bar: makePlainReducer('initial bar', (rstate: string, action: PlainAction) => {
           return action.type === DUMMY_ACTION ? 'bar updated' : rstate;
         }),
-        baz: makeExReducer(
+        baz: makeDiReducer(
           {key: 'initial baz'},
           {foo: '@foo', bar: '@bar'},
-          (rstate: Object, action: PlainAction, {foo, bar}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo, bar}, changes: DiChanges) => {
             depsChanges = changes;
             if (changes.for('foo') && changes.for('bar')) return {key: `${foo} + ${bar}`};
             return rstate;
@@ -466,7 +466,7 @@ describe('exCombineReducers() mixed on root level', () => {
       action = doUpdateAction();
 
     // assert state
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo updated',
       bar: 'bar',
@@ -500,18 +500,18 @@ describe('exCombineReducers() mixed on root level', () => {
         foo: makePlainReducer('initial foo', (rstate: string, action: PlainAction) => {
           return action.type === DO_UPDATE_ACTION ? 'foo updated' : rstate;
         }),
-        bar: makeExReducer(
+        bar: makeDiReducer(
           'initial bar',
           {baz: '@baz'},
-          (rstate: string, action: PlainAction, {baz}, changes: ExReducerDependenciesChanges) => {
+          (rstate: string, action: PlainAction, {baz}, changes: DiChanges) => {
             barDepsChanges = changes;
             return changes.yes() ? `bar changed with: ${baz.key}` : rstate;
           },
         ),
-        baz: makeExReducer(
+        baz: makeDiReducer(
           {key: 'initial baz'},
           {foo: '@foo'},
-          (rstate: Object, action: PlainAction, {foo}, changes: ExReducerDependenciesChanges) => {
+          (rstate: Object, action: PlainAction, {foo}, changes: DiChanges) => {
             bazDepsChanges = changes;
             if (changes.yes()) return {key: `baz changed with: ${foo}`};
             return rstate;
@@ -520,7 +520,7 @@ describe('exCombineReducers() mixed on root level', () => {
       action = doUpdateAction();
 
     // assert state
-    const newState = exCombineReducers(reducerTree)(state, action);
+    const newState = combineDiReducers(reducerTree)(state, action);
     expect(newState).toEqual({
       foo: 'foo updated',
       bar: 'bar changed with: baz changed with: foo updated',
