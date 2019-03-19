@@ -1,3 +1,6 @@
+### 0.5.0
+`redux-exr` has been rebranded into `redux-di`.
+
 ### 0.4.0
 - Improved flow types
 

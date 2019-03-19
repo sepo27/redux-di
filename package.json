@@ -1,13 +1,13 @@
 {
-  "name": "redux-exr",
-  "version": "0.4.1",
-  "description": "Redux extended reducer",
+  "name": "@sepo27/redux-di",
+  "version": "0.5.0",
+  "description": "Redux dependency injection reducers",
   "main": "lib/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "eslint": "eslint --config ./.eslintrc --ext .js",
+    "eslint": "eslint --config ./.eslintrc --ext .js src",
     "flow": "flow status src",
     "flow-restart": "flow stop src && npm run flow",
     "flow-typed": "flow-typed install -r src --ignoreDeps dev && flow-typed install -r src jest@21.2.1",
@@ -19,7 +19,7 @@
     "prepublishOnly": "npm run checks && npm run build",
     "precommit": "./scripts/precommit"
   },
-  "repository": "https://github.com/paska27/redux-exr",
+  "repository": "https://github.com/sepo27/redux-di",
   "keywords": [
     "redux"
   ],
