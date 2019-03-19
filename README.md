@@ -1,4 +1,4 @@
-## Redux extended reducers
+## Redux dependency injection reducers
 
 ### Rationale
 A function `combineDiReducers()` handles depedency injection into reducers in tree.
