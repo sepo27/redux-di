@@ -15,7 +15,6 @@
     "test-one": "jest",
     "checks": "npm run eslint && npm run test",
     "build": "babel src --out-dir lib",
-    "postinstall": "npm run flow-typed",
     "prepublishOnly": "npm run checks && npm run build",
     "precommit": "./scripts/precommit"
   },
