@@ -1,49 +1,19 @@
 {
   "name": "@sepo27/redux-di",
   "version": "0.5.1",
-  "description": "Redux dependency injection reducers",
+  "description": "Redux reducers with dependency injection",
   "main": "lib/index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
-    "eslint": "eslint --config ./.eslintrc --ext .js src",
-    "flow": "flow status src",
-    "flow-restart": "flow stop src && npm run flow",
-    "flow-typed": "flow-typed install -r src --ignoreDeps dev && flow-typed install -r src jest@21.2.1",
-    "test": "jest tests/*.js",
-    "test-one": "jest",
-    "checks": "npm run eslint && npm run test",
-    "build": "babel src --out-dir lib",
-    "prepublishOnly": "npm run checks && npm run build",
-    "precommit": "./scripts/precommit"
   },
   "repository": "https://github.com/sepo27/redux-di",
   "keywords": [
-    "redux"
+    "redux",
+    "dependency injection"
   ],
   "author": "Sergey Poskachey",
   "license": "ISC",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.2",
-    "babel-jest": "^21.2.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-stage-0": "^6.24.1",
-    "eslint": "^4.11.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jest": "^21.3.2",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.4.0",
-    "flow-bin": "^0.70.0",
-    "flow-typed": "^2.4.0",
-    "husky": "^0.14.3",
-    "jest": "^21.2.1"
   },
   "dependencies": {
-    "ramda": "^0.25.0"
   }
 }

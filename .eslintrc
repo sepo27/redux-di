@@ -1,7 +1,6 @@
 {
   "extends":[
-    "airbnb",
-    "plugin:flowtype/recommended"
+    "airbnb"
   ],
 
   "env": {
@@ -36,14 +35,7 @@
   },
 
   "plugins": [
-    "flowtype",
     "jest"
-  ],
-
-  "settings": {
-    "flowtype": {
-      "onlyFilesWithFlowAnnotation": true
-    }
-  }
+  ]
 }
 

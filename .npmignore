@@ -1,11 +1,5 @@
-flow-typed
-scripts
-src
-.babelrc
-.eslintrc
-.gitignore
-.npmignore
-.nvmrc
-.idea
-tests
+*
+!lib/**
+!package.json
+!README.md
 
