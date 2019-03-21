@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -e
+
+# to disable precommit hook: "git config precommit.disable 1"
+disable=`grep -Pzo '\[precommit\]\s+disable\s+=\s+1' .git/config &> /dev/null || false`
+if [ "$disable" ]; then
+  exit 0
+fi
+
+diff() {
+  git diff-index --name-only HEAD
+}
+
+grepTypes() {
+  diff | grep -Eq "\.($1)$"
+  return $?
+}
+
+# run eslint
+if grepTypes "ts"
+then
+  echo "=== Running eslint"
+  npm run eslint `diff | grep -P "\.(ts)$"`
+  
+  echo "\n=== Running tests"
+  npm run test
+fi
+

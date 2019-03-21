@@ -4,6 +4,10 @@
   "description": "Redux reducers with dependency injection",
   "main": "lib/index.js",
   "scripts": {
+    "compile": "tsc -p tsconfig.json",
+    "eslint:base": "eslint -c ./.eslintrc --ext .ts",
+    "eslint": "npm run eslint:base src tests",
+    "test": "jest -c jest.config.json tests"
   },
   "repository": "https://github.com/sepo27/redux-di",
   "keywords": [
@@ -13,7 +17,17 @@
   "author": "Sergey Poskachey",
   "license": "ISC",
   "devDependencies": {
-  },
-  "dependencies": {
+    "@types/jest": "^24.0.11",
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.4.1",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
+    "husky": "^1.3.1",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.2.1",
+    "typescript-eslint-parser": "^22.0.0"
   }
 }

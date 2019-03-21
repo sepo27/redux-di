@@ -9,6 +9,8 @@
     "jest/globals": true
   },
 
+  "parser": "typescript-eslint-parser",
+
   "rules": {
     "max-len": ["error", {"code": 120, "ignoreComments": true}],
     "one-var": "off",
