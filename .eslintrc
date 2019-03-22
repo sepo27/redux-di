@@ -14,7 +14,10 @@
   "rules": {
     "max-len": ["error", {"code": 120, "ignoreComments": true}],
     "one-var": "off",
-    "object-curly-spacing": "off",
+    "object-curly-spacing": ["error", "always"],
+    "object-curly-newline": ["error", {
+      "consistent": true
+    }],
     "no-multiple-empty-lines": ["error", {"max": 1}],
     "arrow-parens": ["error", "as-needed"],
     "newline-per-chained-call": "off",
@@ -23,6 +26,7 @@
     "semi-style": "off",
     "function-paren-newline": "off",
     "one-var-declaration-per-line": "off",
+    "implicit-arrow-linebreak": "off",
 
     "import/no-extraneous-dependencies": [
       "error",
@@ -36,8 +40,14 @@
     "jest/valid-expect": "error"
   },
 
+  "settings": {
+    "import/resolver": {
+      // use <root>/tsconfig.json
+      "typescript": {}
+    }
+  },
+  
   "plugins": [
     "jest"
   ]
 }
-

@@ -9,7 +9,7 @@ if [ "$disable" ]; then
 fi
 
 diff() {
-  git diff-index --name-only HEAD
+  git diff-index --name-only --diff-filter=ACMRTUXB HEAD
 }
 
 grepTypes() {
