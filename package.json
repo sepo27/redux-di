@@ -7,7 +7,7 @@
     "compile": "tsc -p tsconfig.json",
     "eslint:base": "eslint -c ./.eslintrc --ext .ts",
     "eslint": "npm run eslint:base src tests",
-    "test": "jest -c jest.config.json tests"
+    "test": "jest -c jest.config.json src"
   },
   "repository": "https://github.com/sepo27/redux-di",
   "keywords": [
