@@ -1,4 +1,6 @@
 
+export type MapS<V> = { [K: string]: V };
+
 export interface Action<T extends string = any> {
   type: T,
 }
