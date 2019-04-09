@@ -16,6 +16,12 @@ export type DependencyMapSelector = string; // TODO
 
 export type DependencyMap = MapS<DependencyMapSelector>;
 
+export type DiReducerParams<
+  S,
+  A extends Action = AnyAction,
+  D extends Dependencies = Dependencies,
+> = [DependencyMap, DiReducerFn<S, A, D>] | [S, DependencyMap, DiReducerFn<S, A, D>];
+
 export type DiReducer<
   S = any,
   A extends Action = AnyAction,

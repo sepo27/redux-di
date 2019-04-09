@@ -1,22 +1,15 @@
 import { Action, AnyAction } from '../types'; // eslint-disable-line no-unused-vars
-import { Dependencies, DependencyMap, DiReducer, DiReducerFn } from './types'; // eslint-disable-line no-unused-vars
+import { Dependencies, DiReducer, DiReducerParams } from './types'; // eslint-disable-line no-unused-vars
+import { parseDiReducerParams } from './functions';
 
 // TODO: fix eslint indent
-
-type Params<
-  S,
-  A extends Action = AnyAction,
-  D extends Dependencies = Dependencies,
-> = [DependencyMap, DiReducerFn<S, A, D>] | [S, DependencyMap, DiReducerFn<S, A, D>];
 
 export const diReducer = <
   S = any,
   A extends Action = AnyAction,
   D extends Dependencies = Dependencies,
->(...params: Params<S, A, D>): DiReducer<S, A, D> => { // eslint-disable-line indent
-  const [initialState, dependencyMap, reducer] = params.length === 3
-    ? params
-    : [undefined, params[0], params[1]];
+>(...params: DiReducerParams<S, A, D>): DiReducer<S, A, D> => { // eslint-disable-line indent
+  const [initialState, dependencyMap, reducer] = parseDiReducerParams(params);
 
   let reducerWrap;
 
