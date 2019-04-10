@@ -23,6 +23,9 @@ then
   echo "=== Running eslint"
   npm run eslint `diff | grep -P "\.(ts)$"`
   
+  echo "=== Trying to compile dry"
+  npx tsc --project tsconfig.json --noEmit
+  
   echo "\n=== Running tests"
   npm run test
 fi
