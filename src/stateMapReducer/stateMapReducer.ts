@@ -1,4 +1,4 @@
-import { Reducer } from '../types'; // eslint-disable-line no-unused-vars
+import { Action, AnyAction, Reducer } from '../types'; // eslint-disable-line no-unused-vars
 import { validateStateMapReducerParams, getStateMapReducerState } from './functions';
 import { DiReducer } from '../diReducer/types'; // eslint-disable-line no-unused-vars
 import { isDiReducer } from '../utils/isType';
@@ -7,9 +7,9 @@ import { SateMapReducerReducersMap, StateMapReducerState } from './types'; // es
 import { ReduxDiError } from '../utils/ReduxDiError';
 import { objectKeysNotEqual } from '../utils/objectKeysAreEqual'; // eslint-disable-line no-unused-vars
 
-export const stateMapReducer = <S extends StateMapReducerState>(
+export const stateMapReducer = <S extends StateMapReducerState, A extends Action = AnyAction>(
   initialState: S,
-  reducers: SateMapReducerReducersMap,
+  reducers: SateMapReducerReducersMap<S, A>,
 ): Reducer<S> | DiReducer<S> => {
   validateStateMapReducerParams(initialState, reducers);
 
@@ -41,7 +41,7 @@ export const stateMapReducer = <S extends StateMapReducerState>(
     }
 
     return diReducer(dependencyMap, (state, action, dependencies) => {
-      if (!Object.keys(dependencies).length) {
+      if (state !== undefined && (!dependencies || !Object.keys(dependencies).length)) {
         throw new ReduxDiError('Dependencies cannot be empty.');
       }
 
@@ -50,12 +50,11 @@ export const stateMapReducer = <S extends StateMapReducerState>(
         reducers,
         state,
         getPropState: prop => {
-          const propReducer = reducers[prop];
-
           let nextPropState;
 
-          if (isDiReducer(propReducer)) {
+          if (isDiReducer(reducers[prop])) {
             const
+              propReducer = reducers[prop] as DiReducer<S[typeof prop]>,
               propDependencies = Object
                 .keys(dependencies)
                 .reduce(
@@ -77,6 +76,7 @@ export const stateMapReducer = <S extends StateMapReducerState>(
 
             nextPropState = propReducer(state[prop], action, propDependencies);
           } else {
+            const propReducer = reducers[prop] as Reducer<S[typeof prop]>;
             nextPropState = propReducer(state[prop], action);
           }
 

@@ -23,9 +23,26 @@ describe('stateMapReducer', () => {
     });
   });
 
+  it('resolves initial state with di reducer & empty dependencies', () => {
+    const
+      initialState = {
+        foo: 'foo',
+        bar: 'bar',
+      },
+      reducer = stateMapReducer(initialState, {
+        foo: diReducer({ bar: '@bar' }, s => s),
+        bar: s => s,
+      }) as DiReducer;
+
+    expect(reducer(undefined, dummyAction(), {})).toEqual({
+      foo: 'foo',
+      bar: 'bar',
+    });
+  });
+
   it('returns di reducer with at least one di reducer', () => {
     const reducer = stateMapReducer({ foo: '' }, {
-      foo: diReducer({ bar: '@bar' }, s => s),
+      foo: diReducer<string>({ bar: '@bar' }, s => s),
     });
 
     expect(isDiReducer(reducer)).toBeTruthy();
@@ -33,11 +50,11 @@ describe('stateMapReducer', () => {
 
   it('combines overall dependency map for di reducer', () => {
     const reducer = stateMapReducer({ foo: '', fox: '' }, {
-      foo: diReducer(
+      foo: diReducer<string>(
         { bar: '@bar', baz: '@baz' },
         s => s,
       ),
-      fox: diReducer(
+      fox: diReducer<string>(
         { bar: '@bar', baz: '@baz' },
         s => s,
       ),
@@ -54,7 +71,7 @@ describe('stateMapReducer', () => {
   it('updates state with di reducer', () => {
     const
       reducer = stateMapReducer({ foo: '' }, {
-        foo: diReducer({ bar: '@bar' }, (s, a, d) => (
+        foo: diReducer<string>({ bar: '@bar' }, (s, a, d) => (
           a.type === UPDATE_ACTION ? `${s} + ${d.bar}` : s
         )),
       }),
@@ -75,7 +92,7 @@ describe('stateMapReducer', () => {
   it('returns the same state with di reducer', () => {
     const
       reducer = stateMapReducer({ foo: '' }, {
-        foo: diReducer({ bar: '@bar' }, (s, a, d) => (
+        foo: diReducer<string>({ bar: '@bar' }, (s, a, d) => (
           a.type === UPDATE_ACTION ? `${s} + ${d.bar}` : s
         )),
       }),
@@ -94,7 +111,7 @@ describe('stateMapReducer', () => {
       fooReducer = jest.fn(s => s),
       reducer = stateMapReducer({ foo: '', bar: '' }, {
         foo: fooReducer,
-        bar: diReducer({ foo: '@foo' }, s => s),
+        bar: diReducer<string>({ foo: '@foo' }, s => s),
       }),
       state = {
         foo: 'foo',

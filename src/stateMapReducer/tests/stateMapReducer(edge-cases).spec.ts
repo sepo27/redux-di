@@ -34,6 +34,7 @@ describe('stateMapReducer', () => {
   it('invalidates empty reducers map', () => {
     expect(() => stateMapReducer(
       { foo: 'foo' },
+      // @ts-ignore
       {},
     )).toThrow(
       new ReduxDiError('Invalid reducers map given to stateMapReducer. Expecting non-empty object of reducers.'),
@@ -43,6 +44,7 @@ describe('stateMapReducer', () => {
   it('invalidates initial state / reducers map shape mismatch', () => {
     expect(() => stateMapReducer(
       { foo: 'foo' },
+      // @ts-ignore
       { bar: s => s },
     )).toThrow(new ReduxDiError('Initial state - reducers map shape mismatch.'));
   });
@@ -70,14 +72,14 @@ describe('stateMapReducer', () => {
   it('invalidates empty dependency map', () => {
     expect(
       () => stateMapReducer({ foo: '' }, {
-        foo: diReducer({}, s => s),
+        foo: diReducer<string>({}, s => s),
       }),
     ).toThrow(new ReduxDiError('Dependency map cannot be empty.'));
   });
 
   it('invalidates empty dependencies', () => {
     const reducer = stateMapReducer({ foo: '' }, {
-      foo: diReducer({ foo: '@foo' }, s => s),
+      foo: diReducer<string>({ foo: '@foo' }, s => s),
     }) as DiReducer;
 
     expect(
@@ -85,9 +87,20 @@ describe('stateMapReducer', () => {
     ).toThrow(new ReduxDiError('Dependencies cannot be empty.'));
   });
 
+  it('invalidates empty dependencies #2', () => {
+    const reducer = stateMapReducer({ foo: '' }, {
+      foo: diReducer<string>({ foo: '@foo' }, s => s),
+    }) as DiReducer;
+
+    expect(
+      // @ts-ignore
+      () => reducer({ foo: 'foo' }, dummyAction()),
+    ).toThrow(new ReduxDiError('Dependencies cannot be empty.'));
+  });
+
   it('invalidates missing dependency for di reducer', () => {
     const reducer = stateMapReducer({ foo: '' }, {
-      foo: diReducer({ bar: '@bar' }, s => s),
+      foo: diReducer<string>({ bar: '@bar' }, s => s),
     }) as DiReducer;
 
     expect(

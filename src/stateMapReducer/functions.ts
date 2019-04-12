@@ -5,7 +5,7 @@ import { objectKeysNotEqual } from '../utils/objectKeysAreEqual';
 
 export const validateStateMapReducerParams = (
   initialState: StateMapReducerState,
-  reducers: SateMapReducerReducersMap,
+  reducers: SateMapReducerReducersMap<any>,
 ) => {
   if (!isObj(initialState) || !Object.keys(initialState).length) {
     throw new ReduxDiError('Invalid initial state given to stateMapReducer. Expecting non-empty object.');
@@ -22,7 +22,7 @@ export const validateStateMapReducerParams = (
 
 interface GetNextStateParams<S extends StateMapReducerState> {
   initialState: S,
-  reducers: SateMapReducerReducersMap,
+  reducers: SateMapReducerReducersMap<S>,
   state: S,
   getPropState: (prop: string) => any,
 }
