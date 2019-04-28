@@ -1,5 +1,5 @@
-import { dummyAction, UPDATE_ACTION, updateAction } from '../../tests/actions';
-import { diMemoReducer } from './diMemoReducer';
+import { dummyAction, UPDATE_ACTION, updateAction } from '../../../tests/actions';
+import { diMemoReducer } from '../diMemoReducer';
 
 describe('diMemoReducer', () => {
   it('calls reducer with different dependencies', () => {
@@ -11,7 +11,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? { foo: s.foo + d.bar } : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, action, { bar: 2 });
     expect(nextState1).toEqual({ foo: 3 });
@@ -29,7 +29,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? { foo: s.foo + d.bar } : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, action, { bar: 1 });
     const nextState2 = reducer(state, action, { bar: 1 });
@@ -49,7 +49,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? s + d.foo : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, action, dependencies);
     const nextState2 = reducer(state, action, dependencies);
@@ -70,7 +70,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? { ...state, ...d } : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, action, dependencies);
     const nextState2 = reducer(nextState1, action, dependencies);
@@ -89,7 +89,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? s + d.foo : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, updateAction(), dependencies);
     const nextState2 = reducer(state, updateAction(), dependencies);
@@ -107,7 +107,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? s + d.foo : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, updateAction(), dependencies);
     const nextState2 = reducer(state, dummyAction(), dependencies);
@@ -125,7 +125,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? s + d.foo : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, updateAction(), dependencies);
     const nextState2 = reducer(nextState1, dummyAction(), dependencies);
@@ -135,7 +135,7 @@ describe('diMemoReducer', () => {
   });
 
   it('handles initial state properly', () => {
-    const reducer = diMemoReducer(10, {}, (s, a, d) => (
+    const reducer = diMemoReducer(10, { bar: '@foo' }, (s, a, d) => (
       a.type === UPDATE_ACTION
         ? s + d.foo
         : s
@@ -156,7 +156,7 @@ describe('diMemoReducer', () => {
       reducerFn = jest.fn((s, a, d) => (
         a.type === UPDATE_ACTION ? { foo: `${s.foo} & ${d.bar}` } : s
       )),
-      reducer = diMemoReducer({}, reducerFn);
+      reducer = diMemoReducer({ bar: '@foo' }, reducerFn);
 
     const nextState1 = reducer(state, updateAction(), { bar: 'bar' });
     expect(nextState1).toEqual({ foo: 'foo & bar' });

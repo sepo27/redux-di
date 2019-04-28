@@ -1,8 +1,31 @@
 import { Action, AnyAction } from '../types'; // eslint-disable-line no-unused-vars
-import { Dependencies, DiReducer, DiReducerParams } from './types'; // eslint-disable-line no-unused-vars
+import { Dependencies, DiReducer, DiReducerFn, DiReducerParams } from './types'; // eslint-disable-line no-unused-vars
 import { parseDiReducerParams } from './functions';
+import { DiSelector } from '../diSelector/DiSelector_DEPRECATED';
+import { isObj } from '../utils/isType';
+import { ReduxDiError } from '../utils/ReduxDiError';
 
-// TODO: fix eslint indent
+const wrapSelectorReducer = (dependencyMap, reducer) => (s, a, d) => {
+  if (s === undefined) {
+    return reducer(s, a, d);
+  }
+
+  // TODO: correct error message
+  if (!isObj(d)) {
+    throw new ReduxDiError('Invalid dependencies given to combineReducers() reducer. Expecting non-empty object.');
+  }
+
+  const findDependencies = Object.keys(d).reduce(
+    (acc, k) => Object.assign(acc, {
+      [k]: dependencyMap[k] instanceof DiSelector
+        ? dependencyMap[k].selector(d[k])
+        : d[k],
+    }),
+    {},
+  );
+
+  return reducer(s, a, findDependencies);
+};
 
 export const diReducer = <
   S = any,
@@ -11,19 +34,30 @@ export const diReducer = <
 >(...params: DiReducerParams<S, A, D>): DiReducer<S, A, D> => { // eslint-disable-line indent
   const [initialState, dependencyMap, reducer] = parseDiReducerParams(params);
 
-  let reducerWrap;
+  if (!Object.keys(dependencyMap).length) {
+    throw new ReduxDiError('Empty dependency map given to diReducer.');
+  }
+
+  const wrapReducer = wrapSelectorReducer(dependencyMap, reducer);
+
+  // TODO
+  // if (!Object.keys(dependencyMap).length) {
+  //   throw new ReduxDiError('Empty dependency map given to diReducer.');
+  // }
+
+  let resReducer;
 
   if (initialState === undefined) {
-    reducerWrap = (s, a, d) => reducer(s, a, d);
+    resReducer = wrapReducer;
   } else {
-    reducerWrap = (s, a, d) => (
+    resReducer = (s, a, d) => (
       s === undefined
         ? initialState
-        : reducer(s, a, d)
+        : wrapReducer(s, a, d)
     );
   }
 
-  reducerWrap._rdi = dependencyMap; // eslint-disable-line no-underscore-dangle
+  resReducer._rdi = dependencyMap; // eslint-disable-line no-underscore-dangle
 
-  return reducerWrap;
+  return resReducer;
 };

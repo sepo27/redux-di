@@ -1,0 +1,10 @@
++ plain
++ di
+  + relative to same level
++ di-with-selectors
++ edge-cases
+  + check invalid path
+- circular dependencies ???
+- root-di
+- root-di-nested
+- root-edge-cases

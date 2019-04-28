@@ -1,4 +1,5 @@
 import { Action, AnyAction, MapS } from '../types'; // eslint-disable-line no-unused-vars
+import { DiSelector } from '../diSelector/DiSelector_DEPRECATED'; // eslint-disable-line no-unused-vars
 
 export type Dependencies = MapS<any>;
 
@@ -12,7 +13,7 @@ export type DiReducerFn<
   dependencies: Dependencies,
 ) => S;
 
-export type DependencyMapSelector = string; // TODO
+export type DependencyMapSelector = string | DiSelector;
 
 export type DependencyMap = MapS<DependencyMapSelector>;
 
