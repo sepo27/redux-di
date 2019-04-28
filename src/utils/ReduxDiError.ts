@@ -15,12 +15,3 @@ export class ReduxDiError extends Error {
     }
   }
 }
-
-// export class RdiCircularDependencyError extends ReduxDiError {
-//   constructor(dependenciesCircle: string[]) {
-//     let circleMsg = dependenciesCircle.join(' -> ');
-//     if (circleMsg.length > 100) circleMsg = `\n${dependenciesCircle.join(' -> \n')}`;
-//
-//     super(`Circular dependency detected: ${circleMsg}`);
-//   }
-// }

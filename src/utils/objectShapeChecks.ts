@@ -1,6 +1,6 @@
 import { MapS } from '../types'; // eslint-disable-line no-unused-vars
 
-export const objectKeysEqual = (o1: MapS<any>, o2: MapS<any>): boolean => {
+export const sameObjectsShape = (o1: MapS<any>, o2: MapS<any>): boolean => {
   const
     keys1 = Object.keys(o1),
     keys2 = Object.keys(o2);
@@ -19,5 +19,5 @@ export const objectKeysEqual = (o1: MapS<any>, o2: MapS<any>): boolean => {
   return true;
 };
 
-export const objectKeysNotEqual = (o1: MapS<any>, o2: MapS<any>): boolean =>
-  !objectKeysEqual(o1, o2);
+export const diffObjectsShape = (o1: MapS<any>, o2: MapS<any>): boolean =>
+  !sameObjectsShape(o1, o2);
