@@ -1,0 +1,3 @@
+- rebase with laptop code
+- package for installing from git branch
+- include redux-di in research repo

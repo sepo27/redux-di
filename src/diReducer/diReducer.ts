@@ -10,9 +10,8 @@ const wrapSelectorReducer = (dependencyMap, reducer) => (s, a, d) => {
     return reducer(s, a, d);
   }
 
-  // TODO: correct error message
   if (!isObj(d)) {
-    throw new ReduxDiError('Invalid dependencies given to combineReducers() reducer. Expecting non-empty object.');
+    throw new ReduxDiError('Invalid dependencies given to diReducer(). Expecting non-empty object.');
   }
 
   const findDependencies = Object.keys(d).reduce(
@@ -39,11 +38,6 @@ export const diReducer = <
   }
 
   const wrapReducer = wrapSelectorReducer(dependencyMap, reducer);
-
-  // TODO
-  // if (!Object.keys(dependencyMap).length) {
-  //   throw new ReduxDiError('Empty dependency map given to diReducer.');
-  // }
 
   let resReducer;
 

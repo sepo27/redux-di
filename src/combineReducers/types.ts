@@ -9,4 +9,5 @@ export type CombineReducersMap<S, A extends Action = AnyAction> = {
 
 export interface CombineReducersOptions<S extends CombineReducersState> {
   initialState?: S;
+  isRoot?: boolean;
 }

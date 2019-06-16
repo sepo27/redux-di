@@ -48,7 +48,7 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
       return value;
     };
 
-  return diReducer(dependencyMap, (state, action, dependencies) => resolveState<S>({
+  const reducer = (state, action, dependencies) => resolveState<S>({
     reducers,
     options,
     state,
@@ -70,6 +70,22 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
               const dStrPath = propDependencyMap[dName].toString();
 
               if (dStrPath[0] === '.') {
+                const
+                  dArrPath = toArrPath(dStrPath.substring(1)),
+                  dProp = dArrPath[0];
+
+                let dValue;
+
+                if (resolvedValues[dProp] === undefined) {
+                  dValue = setResolvedValue(dProp, resolvePropState(dProp));
+                } else {
+                  dValue = resolvedValues[dProp];
+                }
+
+                return Object.assign(acc, { [dName]: dValue });
+              }
+
+              if (options.isRoot && dStrPath[0] === '@') {
                 const
                   dArrPath = toArrPath(dStrPath.substring(1)),
                   dProp = dArrPath[0];
@@ -115,5 +131,11 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
 
       return nextPropState;
     },
-  }));
+  });
+
+  if (options.isRoot) {
+    return reducer as Reducer<S, A>;
+  }
+
+  return diReducer(dependencyMap, reducer) as DiReducer<S, A>;
 };
