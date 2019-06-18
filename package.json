@@ -1,13 +1,16 @@
 {
   "name": "@sepo27/redux-di",
-  "version": "0.5.1",
+  "version": "1.0.0-alpha+1",
   "description": "Redux reducers with dependency injection",
   "main": "lib/index.js",
   "scripts": {
     "compile": "tsc -p tsconfig.json",
+    "compile:publish": "tsc -p tsconfig-publish.json",
     "eslint:base": "eslint -c ./.eslintrc --ext .ts",
     "eslint": "npm run eslint:base src tests",
-    "test": "jest -c jest.config.json src"
+    "test": "jest -c jest.config.json src",
+    "checks": "npm run eslint && npx tsc --project tsconfig.json --noEmit && npm run test",
+    "prepublish": "npm run checks && npm run compile:publish"
   },
   "repository": "https://github.com/sepo27/redux-di",
   "keywords": [
