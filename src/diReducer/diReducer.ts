@@ -12,7 +12,7 @@ const wrapSelectorReducer = (dependencyMap: DependencyMap<DiSelector>, reducer) 
 
   // TODO: correct error message
   if (!isObj(d)) {
-    throw new ReduxDiError('Invalid dependencies given to combineReducers() reducer. Expecting non-empty object.');
+    throw new ReduxDiError('Invalid dependencies given to diReducer(). Expecting non-empty object.');
   }
 
   // TODO: think if we still need this

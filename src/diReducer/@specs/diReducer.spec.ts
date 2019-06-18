@@ -83,7 +83,7 @@ describe('diReducer', () => {
         // @ts-ignore
         () => reducer({ foo: 'foo' }, dummyAction(), dependencies),
       ).toThrow(
-        new ReduxDiError('Invalid dependencies given to combineReducers() reducer. Expecting non-empty object.'),
+        new ReduxDiError('Invalid dependencies given to diReducer(). Expecting non-empty object.'),
       );
     });
   });

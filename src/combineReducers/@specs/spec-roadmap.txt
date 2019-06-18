@@ -2,9 +2,9 @@
 + di
   + relative to same level
 + di-with-selectors
-- edge-cases
++ edge-cases
   + check invalid path
-- circular dependencies ??? 
+- circular dependencies ???
 - root-di
 - root-di-nested
 - root-edge-cases
