@@ -109,7 +109,7 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
         nextPropState = propReducer(propState, action, propDependencies);
       } else {
         const propReducer = reducers[prop] as Reducer<S[typeof prop]>;
-        nextPropState = setResolvedValue(prop, propReducer(state[prop], action));
+        nextPropState = setResolvedValue(prop, propReducer(propState, action));
       }
 
       return nextPropState;

@@ -1,10 +1,12 @@
 import { DiReducer } from '../../diReducer/types'; // eslint-disable-line no-unused-vars
+import { Reducer } from '../../types'; // eslint-disable-line no-unused-vars
 import { combineReducers } from '../combineReducers';
 import { diReducer } from '../../diReducer/diReducer';
 import { dummyAction, UPDATE_ACTION, updateAction } from '../../../tests/actions';
 import { isDiReducer, isPlainReducer } from '../../utils/isType';
 import { strDummyTR, strUpdateDiTR, strUpdateTR } from '../../../tests/reducers';
 import { DiSelector } from '../../diSelector/DiSelector';
+import { initReducer } from '../..';
 
 describe('combineReducers', () => {
   it('resolves initial state from di reducers', () => {
@@ -21,6 +23,19 @@ describe('combineReducers', () => {
     expect(reducer(undefined, dummyAction(), dependencies)).toEqual({
       foo: 1,
       bar: '2',
+    });
+  });
+
+  it('resolves initial state from mixed reducers', () => {
+    const
+      reducer = combineReducers({
+        foo: diReducer('2', { bar: '.bar' }, s => s),
+        bar: initReducer(1, s => s),
+      }) as Reducer;
+
+    expect(reducer(undefined, dummyAction())).toEqual({
+      foo: '2',
+      bar: 1,
     });
   });
 
