@@ -42,79 +42,80 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
     throw new ReduxDiError('Empty dependency map received by combineReducer.');
   }
 
-  const
-    resolvedValues = {} as S,
-    setResolvedValue = (prop, value) => {
-      resolvedValues[prop] = value;
-      return value;
-    };
+  const reducer = (state, action, dependencies) => {
+    const
+      resolvedValues = {} as S,
+      setResolvedValue = (prop, value) => {
+        resolvedValues[prop] = value;
+        return value;
+      };
 
-  const reducer = (state, action, dependencies) => resolveState<S>({
-    reducers,
-    options,
-    state,
-    resolvePropState: function resolvePropState(prop) {
-      let nextPropState;
+    return resolveState<S>({
+      reducers,
+      options,
+      state,
+      resolvePropState: function resolvePropState(prop) {
+        let nextPropState;
 
-      if (resolvedValues[prop] !== undefined) {
-        return resolvedValues[prop];
-      }
+        if (resolvedValues[prop] !== undefined) {
+          return resolvedValues[prop];
+        }
 
-      const propState = state === undefined ? undefined : state[prop];
+        const propState = state === undefined ? undefined : state[prop];
 
-      if (isDiReducer(reducers[prop])) {
-        const
-          propReducer = reducers[prop] as DiReducer<S[typeof prop]>,
-          propDependencyMap = propReducer._rdi, // eslint-disable-line no-underscore-dangle
-          propDependencies = Object.keys(propDependencyMap).reduce(
-            (acc, dName) => {
-              const dSelector: DiSelector = propDependencyMap[dName];
+        if (isDiReducer(reducers[prop])) {
+          const
+            propReducer = reducers[prop] as DiReducer<S[typeof prop]>,
+            propDependencyMap = propReducer._rdi, // eslint-disable-line no-underscore-dangle
+            propDependencies = Object.keys(propDependencyMap).reduce(
+              (acc, dName) => {
+                const dSelector: DiSelector = propDependencyMap[dName];
 
-              if (dSelector.isRelative || (options.isRoot && dSelector.isAbsolute)) {
-                const dProp = dSelector.path[0];
+                if (dSelector.isRelative || (options.isRoot && dSelector.isAbsolute)) {
+                  const dProp = dSelector.path[0];
 
-                let dValue;
+                  let dValue;
+                  if (resolvedValues[dProp] === undefined) {
+                    dValue = setResolvedValue(dProp, resolvePropState(dProp));
+                  } else {
+                    dValue = resolvedValues[dProp];
+                  }
 
-                if (resolvedValues[dProp] === undefined) {
-                  dValue = setResolvedValue(dProp, resolvePropState(dProp));
-                } else {
-                  dValue = resolvedValues[dProp];
+                  return Object.assign(acc, { [dName]: dValue });
                 }
 
-                return Object.assign(acc, { [dName]: dValue });
-              }
+                if (dSelector.isAbsolute) {
+                  const
+                    // @ts-ignore: TODO
+                    propDName = makePropDName(prop, dName),
+                    dValue = dependencies[propDName];
 
-              if (dSelector.isAbsolute) {
-                const
-                  // @ts-ignore: TODO
-                  propDName = makePropDName(prop, dName),
-                  dValue = dependencies[propDName];
+                  return Object.assign(acc, { [dName]: dValue });
+                }
 
-                return Object.assign(acc, { [dName]: dValue });
-              }
+                return acc;
+              },
+              {},
+            );
 
-              return acc;
-            },
-            {},
-          );
-
-        if (diffObjectsShape(propDependencyMap, propDependencies)) {
-          throw new ReduxDiError(`
+          if (diffObjectsShape(propDependencyMap, propDependencies)) {
+            throw new ReduxDiError(`
             Invalid dependencies given to reducer "foo":
             Dependency map declared: ${JSON.stringify(dependencyMapToString(propDependencyMap))};
             Received dependencies: ${JSON.stringify(propDependencies)}
           `);
+          }
+
+          nextPropState = propReducer(propState, action, propDependencies);
+        } else {
+          const propReducer = reducers[prop] as Reducer<S[typeof prop]>;
+          nextPropState = setResolvedValue(prop, propReducer(propState, action));
         }
 
-        nextPropState = propReducer(propState, action, propDependencies);
-      } else {
-        const propReducer = reducers[prop] as Reducer<S[typeof prop]>;
-        nextPropState = setResolvedValue(prop, propReducer(propState, action));
-      }
-
-      return nextPropState;
-    },
-  });
+        return nextPropState;
+      },
+    });
+  };
 
   if (!options.isRoot && hasDiReducerWithAbsolutePath(reducers)) {
     return diReducer(dependencyMap, reducer);

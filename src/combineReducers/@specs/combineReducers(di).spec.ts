@@ -306,4 +306,37 @@ describe('combineReducers', () => {
       baz: 'Baz updated + the bar updated + a foo updated',
     });
   });
+
+  it('resolves mixed reducers several times', () => {
+    const
+      reducer = combineReducers({
+        bar: diReducer({ foo: '.foo' }, (s, a, d) => (
+          a.type === UPDATE_ACTION
+            ? s + 1 + d.foo
+            : s
+        )),
+        foo: (s, a) => (
+          a.type === UPDATE_ACTION
+            ? s + 1
+            : s
+        ),
+      }) as Reducer;
+
+    let state = {
+      bar: 0,
+      foo: 0,
+    };
+
+    state = reducer(state, updateAction());
+    expect(state).toEqual({
+      bar: 2,
+      foo: 1,
+    });
+
+    state = reducer(state, updateAction());
+    expect(state).toEqual({
+      bar: 5,
+      foo: 2,
+    });
+  });
 });
