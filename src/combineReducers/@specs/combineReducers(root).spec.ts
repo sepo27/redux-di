@@ -58,4 +58,29 @@ describe('root combineReducers', () => {
       },
     });
   });
+
+  // TODO: this needs to be reproduced properly
+  xit('resolves nested combine reducers and di reducer', () => {
+    const
+      reducer = combineReducers({
+        foo: combineReducers({
+          baz: diReducer({ bar: '@foo.bar' }, strUpdateDiTR('bar')),
+          bar: strUpdateTR(),
+        }),
+      }, { isRoot: true }) as Reducer,
+      state = {
+        foo: {
+          bar: 'the bar',
+          baz: 'baz value',
+        },
+      },
+      action = updateAction();
+
+    expect(reducer(state, action)).toEqual({
+      foo: {
+        bar: 'the bar updated',
+        baz: 'baz value updated + bar value updated',
+      },
+    });
+  });
 });
