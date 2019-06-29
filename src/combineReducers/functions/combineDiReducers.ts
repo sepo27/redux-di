@@ -100,7 +100,7 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
 
           if (diffObjectsShape(propDependencyMap, propDependencies)) {
             throw new ReduxDiError(`
-            Invalid dependencies given to reducer "foo":
+            Invalid dependencies given to reducer "${prop}":
             Dependency map declared: ${JSON.stringify(dependencyMapToString(propDependencyMap))};
             Received dependencies: ${JSON.stringify(propDependencies)}
           `);
