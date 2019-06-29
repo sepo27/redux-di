@@ -1,11 +1,30 @@
 import { combineReducers } from '../combineReducers';
 import { strUpdateTR, strUpdateDiTR } from '../../../tests/reducers';
 import { diReducer } from '../../diReducer/diReducer';
-import { updateAction } from '../../../tests/actions';
+import { dummyAction, updateAction } from '../../../tests/actions';
 import { Reducer } from '../../types'; // eslint-disable-line no-unused-vars
 import { isPlainReducer } from '../../utils/isType';
 
 describe('root combineReducers', () => {
+  // TODO: fix
+  xit('resolves initial state for nested combine reducers and di reducer', () => {
+    const
+      reducer = combineReducers({
+        foo: combineReducers({
+          bar: strUpdateTR('bar'),
+          baz: diReducer('bar initial', { bar: '@abc' }, s => s),
+        }),
+      }, { isRoot: true }) as Reducer;
+
+    expect(reducer(undefined, dummyAction())).toEqual({
+      abc: 'abc init value',
+      foo: {
+        bar: 'bar',
+        baz: 'bar initial',
+      },
+    });
+  });
+
   it('returns plain reducer', () => {
     const reducer = combineReducers({
       foo: strUpdateTR(''),
@@ -55,31 +74,6 @@ describe('root combineReducers', () => {
       foo: 'foo val updated',
       bar: {
         baz: 'baz updated + foo val updated',
-      },
-    });
-  });
-
-  // TODO: this needs to be reproduced properly
-  xit('resolves nested combine reducers and di reducer', () => {
-    const
-      reducer = combineReducers({
-        foo: combineReducers({
-          baz: diReducer({ bar: '@foo.bar' }, strUpdateDiTR('bar')),
-          bar: strUpdateTR(),
-        }),
-      }, { isRoot: true }) as Reducer,
-      state = {
-        foo: {
-          bar: 'the bar',
-          baz: 'baz value',
-        },
-      },
-      action = updateAction();
-
-    expect(reducer(state, action)).toEqual({
-      foo: {
-        bar: 'the bar updated',
-        baz: 'baz value updated + bar value updated',
       },
     });
   });
