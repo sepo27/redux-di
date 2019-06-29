@@ -1,0 +1,26 @@
+- multi level relative path
+- testReducer()
+{code}
+// Simple reducer test
+const reducer = testReducer(someAppSel)
+
+const
+  state = ...,
+  action = ...;
+
+expect(reducer(state, action)).toEqual(...);
+
+// With DI
+const reducer = testReducer(someAppSel)
+
+const
+  state = ...,
+  action = ...,
+  deps = {
+    foo: ...,
+    ...,
+  };
+
+expect(reducer(state, action, deps)).toEqual(...);
+
+{code}

@@ -5,7 +5,6 @@
 + edge-cases
   + check invalid path
 - fix root initial state test
-- test for multi level up relative path
 - circular dependencies ???
 - root-di
 - root-di-nested
