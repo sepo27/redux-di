@@ -11,3 +11,8 @@ export interface CombineReducersOptions<S extends CombineReducersState> {
   initialState?: S;
   isRoot?: boolean;
 }
+
+export type CombineReducersResultReducer<S extends MapS<any>, A extends Action = AnyAction> = {
+  (): Reducer<S, A> | DiReducer<S, A>,
+  _reducers: CombineReducersMap<S, A>,
+};

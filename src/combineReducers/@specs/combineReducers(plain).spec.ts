@@ -4,6 +4,7 @@ import { combineReducers } from '../combineReducers';
 import { dummyAction, updateAction } from '../../../tests/actions';
 import { isPlainReducer } from '../../utils/isType';
 import { strUpdateTR } from '../../../tests/reducers';
+import { diReducer } from '../..';
 
 describe('combineReducers', () => {
   it('resolves initial state from plain reducers', () => {
@@ -95,5 +96,18 @@ describe('combineReducers', () => {
       };
 
     expect(reducer(state, dummyAction()) === state).toBeTruthy();
+  });
+
+  it('stores ref to reducers into prop for testing purposes', () => {
+    const
+      reducers = {
+        foo: strUpdateTR(),
+        bar: diReducer({ foo: '.foo' }, s => s),
+        baz: combineReducers({
+          fox: strUpdateTR(),
+        }),
+      };
+
+    expect(combineReducers(reducers)._reducers).toBe(reducers); // eslint-disable-line no-underscore-dangle
   });
 });
