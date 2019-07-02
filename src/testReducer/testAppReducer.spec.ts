@@ -1,7 +1,7 @@
 import { Reducer } from '../types'; // eslint-disable-line no-unused-vars
 import { appSel } from '../appSelector/appSel';
 import { testAppReducer } from './testAppReducer';
-import { combineReducers, diReducer } from '..';
+import { combineReducers, diReducer, DiSelector } from '..';
 import { strUpdateDiTR, strUpdateTR } from '../../tests/reducers';
 import { updateAction } from '../../tests/actions';
 import { ReduxDiError } from '../utils/ReduxDiError';
@@ -104,7 +104,16 @@ describe('testAppReducer', () => {
     const
       appReducer = combineReducers({
         abc: combineReducers({
-          foo: diReducer('', { baz: '@bar.baz' }, strUpdateDiTR('baz')),
+          foo: diReducer(
+            '',
+            {
+              baz: new DiSelector('@bar', d => {
+                console.log('===d', d);
+                return d.baz;
+              }),
+            },
+            strUpdateDiTR('baz'),
+          ),
         }),
         bar: combineReducers({
           baz: strUpdateTR(),
