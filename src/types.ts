@@ -11,5 +11,5 @@ export interface AnyAction extends Action {
 
 export type Reducer<S = any, A extends Action = AnyAction> = (
   state: S | undefined,
-  action: A
+  action: A,
 ) => S;
