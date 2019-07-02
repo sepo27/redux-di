@@ -50,7 +50,7 @@ describe('testAppReducer', () => {
     );
   });
 
-  xit('creates reducer by app selector with dependencies', () => {
+  it('creates reducer by app selector with relative dependency', () => {
     const
       appReducer = combineReducers({
         foo: strUpdateTR(),
@@ -62,7 +62,61 @@ describe('testAppReducer', () => {
       state = 'bar bar';
 
     expect(reducer(state, updateAction(), { foo: 'the foo' })).toEqual(
-      'bar bar updated + foo updated',
+      'bar bar updated + the foo updated',
+    );
+  });
+
+  it('creates reducer by deep app selector with relative dependency', () => {
+    const
+      appReducer = combineReducers({
+        bar: combineReducers({
+          foo: strUpdateTR(),
+          baz: diReducer('', { foo: '.foo' }, strUpdateDiTR('foo')),
+        }),
+      }, { isRoot: true }) as Reducer,
+      sel = appSel(['bar', 'baz']),
+      // @ts-ignore: TODO
+      reducer = testAppReducer(appReducer, sel) as DiReducer,
+      state = 'a baz';
+
+    expect(reducer(state, updateAction(), { foo: 'and foo' })).toEqual(
+      'a baz updated + and foo updated',
+    );
+  });
+
+  it('creates reducer by app selector with absolute dependency', () => {
+    const
+      appReducer = combineReducers({
+        foo: diReducer('', { bar: '@bar' }, strUpdateDiTR('bar')),
+        bar: strUpdateTR(),
+      }, { isRoot: true }) as Reducer,
+      sel = appSel(['foo']),
+      // @ts-ignore: TODO
+      reducer = testAppReducer(appReducer, sel) as DiReducer,
+      state = 'foo';
+
+    expect(reducer(state, updateAction(), { bar: 'bar dep' })).toEqual(
+      'foo updated + bar dep updated',
+    );
+  });
+
+  xit('creates reducer by deep app selector with absolute dependency', () => {
+    const
+      appReducer = combineReducers({
+        abc: combineReducers({
+          foo: diReducer('', { baz: '@bar.baz' }, strUpdateDiTR('baz')),
+        }),
+        bar: combineReducers({
+          baz: strUpdateTR(),
+        }),
+      }, { isRoot: true }) as Reducer,
+      sel = appSel(['abc', 'foo']),
+      // @ts-ignore: TODO
+      reducer = testAppReducer(appReducer, sel) as DiReducer,
+      state = 'foo';
+
+    expect(reducer(state, updateAction(), { baz: 'bazzz' })).toEqual(
+      'foo updated + bazzz updated',
     );
   });
 });

@@ -1,11 +1,12 @@
 import { path as rPath, assocPath as rAssocPath } from 'ramda';
 import { AppSel } from '../appSelector/types'; // eslint-disable-line no-unused-vars
-import { Reducer } from '../types'; // eslint-disable-line no-unused-vars
+import { MapS, Reducer } from '../types'; // eslint-disable-line no-unused-vars
 import { dummyAction } from '../../tests/actions';
 import { ReduxDiError } from '../utils/ReduxDiError';
-import { isDiReducer } from '../utils/isType'; // eslint-disable-line no-unused-vars
+import { isDiReducer } from '../utils/isType';
+import { DiSelector } from '..'; // eslint-disable-line no-unused-vars
 
-const findReducerDependencies = (reducer, selectorPath) => { // eslint-disable-line consistent-return
+const findReducerDependencies = (reducer, selectorPath): MapS<DiSelector> => { // eslint-disable-line consistent-return
   if (reducer._reducers) { // eslint-disable-line no-underscore-dangle
     const reducerKeys = Object.keys(reducer._reducers); // eslint-disable-line no-underscore-dangle
     for (let i = 0; i < reducerKeys.length; i++) {
@@ -34,7 +35,16 @@ export const testAppReducer = <S, R>(appReducer: Reducer<S>, selector: AppSel<S,
 
     if (dependencies) {
       const reducerDependencies = findReducerDependencies(appReducer, selectorPath);
-      console.log('===reducerDependencies', reducerDependencies);
+
+      Object.keys(reducerDependencies).forEach(dKey => {
+        const
+          d = reducerDependencies[dKey],
+          dPath = d.isRelative
+            ? selectorPath.slice(0, -1).concat(d.path)
+            : d.path;
+
+        appState = rAssocPath(dPath, dependencies[dKey], appState);
+      });
     }
 
     const nextAppState = appReducer(appState, action);
