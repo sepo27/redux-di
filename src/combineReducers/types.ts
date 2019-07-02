@@ -12,7 +12,16 @@ export interface CombineReducersOptions<S extends CombineReducersState> {
   isRoot?: boolean;
 }
 
-export type CombineReducersResultReducer<S extends MapS<any>, A extends Action = AnyAction> = {
-  (): Reducer<S, A> | DiReducer<S, A>,
-  _reducers: CombineReducersMap<S, A>,
-};
+type CombineReducersResultPlainReducer<S extends MapS<any> = {}, A extends Action = AnyAction> =
+  Reducer<S, A> & {
+    _reducers: CombineReducersMap<S, A>,
+  };
+
+type CombineReducersResultDiReducer<S extends MapS<any> = {}, A extends Action = AnyAction> =
+  DiReducer<S, A> & {
+    _reducers: CombineReducersMap<S, A>,
+  };
+
+export type CombineReducersResultReducer<S extends MapS<any>, A extends Action = AnyAction> =
+  CombineReducersResultPlainReducer<S, A>
+  | CombineReducersResultDiReducer<S, A>;
