@@ -7,6 +7,12 @@ describe('appSel', () => {
     expect(sel._path).toEqual(['foo', 'bar']); // eslint-disable-line no-underscore-dangle
   });
 
+  it('returns the path from toString()', () => {
+    const sel = appSel(['foo', 'bar']);
+
+    expect(sel.toString()).toEqual(['foo', 'bar']); // eslint-disable-line no-underscore-dangle
+  });
+
   it('selects the value', () => {
     const sel = appSel(['foo', 'bar']);
     expect(sel({ foo: { bar: 'the value' } })).toEqual('the value');
