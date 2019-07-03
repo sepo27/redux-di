@@ -11,3 +11,5 @@ export const isArrPath = (path: ComboPath): path is ArrPath => Array.isArray(pat
 export const toStrPath = (path: ArrPath): StrPath => path.join('.');
 
 export const isStrPath = (path: ComboPath): path is StrPath => isStr(path);
+
+export const resolveArrPath = (p1: ArrPath, p2: ArrPath): ArrPath => p1.concat(p2);
