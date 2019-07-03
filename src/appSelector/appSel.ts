@@ -5,6 +5,6 @@ import { toStrPath } from '../utils/path'; // eslint-disable-line no-unused-vars
 export const appSel = <S, R>(path: SelPath): AppSel<S, R> => {
   const selector = rPath(path);
   selector._path = path; // eslint-disable-line no-underscore-dangle
-  selector.toStrPath = () => toStrPath(path);
+  selector.toString = () => toStrPath(path);
   return selector;
 };

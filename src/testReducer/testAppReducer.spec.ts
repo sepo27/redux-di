@@ -124,7 +124,8 @@ describe('testAppReducer', () => {
       reducer = testAppReducer(appReducer, sel) as DiReducer,
       state = 'foo',
       deps = {
-        [appSel(['bar', 'baz']).toStrPath()]: 'bazzz',
+        // @ts-ignore
+        [appSel(['bar', 'baz'])]: 'bazzz',
       };
 
     expect(reducer(state, updateAction(), deps)).toEqual(

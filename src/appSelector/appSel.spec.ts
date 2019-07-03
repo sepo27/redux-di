@@ -7,10 +7,10 @@ describe('appSel', () => {
     expect(sel._path).toEqual(['foo', 'bar']); // eslint-disable-line no-underscore-dangle
   });
 
-  it('implements toStrPath', () => {
+  it('implements toString()', () => {
     const sel = appSel(['foo', 'bar']);
 
-    expect(sel.toStrPath()).toEqual('foo.bar'); // eslint-disable-line no-underscore-dangle
+    expect(sel.toString()).toEqual('foo.bar'); // eslint-disable-line no-underscore-dangle
   });
 
   it('selects the value', () => {
