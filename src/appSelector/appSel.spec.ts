@@ -17,4 +17,12 @@ describe('appSel', () => {
     const sel = appSel(['foo', 'bar']);
     expect(sel({ foo: { bar: 'the value' } })).toEqual('the value');
   });
+
+  xit('spawns nested selector', () => {
+    const
+      fooSel = appSel(['foo']),
+      fooBarSel = fooSel.spawn(['bar']);
+
+    expect(fooBarSel({ foo: { bar: 'the bar' } })).toEqual('the bar');
+  });
 });
