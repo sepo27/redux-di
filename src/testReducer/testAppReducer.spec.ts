@@ -77,9 +77,12 @@ describe('testAppReducer', () => {
       sel = appSel(['bar', 'baz']),
       // @ts-ignore: TODO
       reducer = testAppReducer(appReducer, sel) as DiReducer,
-      state = 'a baz';
+      state = 'a baz',
+      deps = {
+        'bar.foo': 'and foo',
+      };
 
-    expect(reducer(state, updateAction(), { foo: 'and foo' })).toEqual(
+    expect(reducer(state, updateAction(), deps)).toEqual(
       'a baz updated + and foo updated',
     );
   });
@@ -100,17 +103,14 @@ describe('testAppReducer', () => {
     );
   });
 
-  xit('creates reducer by deep app selector with absolute dependency', () => {
+  it('creates reducer by deep app selector with absolute dependency', () => {
     const
       appReducer = combineReducers({
         abc: combineReducers({
           foo: diReducer(
             '',
             {
-              baz: new DiSelector('@bar', d => {
-                console.log('===d', d);
-                return d.baz;
-              }),
+              baz: new DiSelector('@bar', d => d.baz),
             },
             strUpdateDiTR('baz'),
           ),
@@ -122,9 +122,12 @@ describe('testAppReducer', () => {
       sel = appSel(['abc', 'foo']),
       // @ts-ignore: TODO
       reducer = testAppReducer(appReducer, sel) as DiReducer,
-      state = 'foo';
+      state = 'foo',
+      deps = {
+        [appSel(['bar', 'baz']).toStrPath()]: 'bazzz',
+      };
 
-    expect(reducer(state, updateAction(), { baz: 'bazzz' })).toEqual(
+    expect(reducer(state, updateAction(), deps)).toEqual(
       'foo updated + bazzz updated',
     );
   });

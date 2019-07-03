@@ -1,7 +1,7 @@
 import { isStr } from './isType';
 
 export type StrPath = string;
-export type ArrPath = string[];
+export type ArrPath = (string|number)[];
 export type ComboPath = StrPath | ArrPath;
 
 export const toArrPath = (path: StrPath): ArrPath => path.split('.');

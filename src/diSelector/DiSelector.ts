@@ -23,7 +23,7 @@ export class DiSelector {
       this.path = toArrPath(path.substring(1));
       this.pathPrefix = path[0]; // eslint-disable-line prefer-destructuring
     } else if (isArrPath(path)) {
-      this.path = [path[0].substring(1), ...path.slice(1)];
+      this.path = [path[0].toString().substring(1), ...path.slice(1)];
       this.pathPrefix = path[0][0]; // eslint-disable-line prefer-destructuring
     }
 
