@@ -4,6 +4,7 @@ import { diReducer } from '../../diReducer/diReducer';
 import { dummyAction, updateAction } from '../../../tests/actions';
 import { Reducer } from '../../types'; // eslint-disable-line no-unused-vars
 import { isPlainReducer } from '../../utils/isType';
+import { DiSelector } from '../..';
 
 describe('root combineReducers', () => {
   // TODO: fix
@@ -53,7 +54,7 @@ describe('root combineReducers', () => {
     });
   });
 
-  it('resolves nested absolute path', () => {
+  it('resolves absolute path from nested reducer', () => {
     const
       reducer = combineReducers({
         foo: strUpdateTR(''),
@@ -74,6 +75,40 @@ describe('root combineReducers', () => {
       foo: 'foo val updated',
       bar: {
         baz: 'baz updated + foo val updated',
+      },
+    });
+  });
+
+  it('resolves nested absolute path with custom selector', () => {
+    const
+      reducer = combineReducers({
+        foo: combineReducers({
+          bar: strUpdateTR(),
+        }),
+        baz: combineReducers({
+          fox: diReducer(
+            {
+              bar: new DiSelector('@foo', foo => foo.bar),
+            },
+            strUpdateDiTR('bar'),
+          ),
+        }),
+      }, { isRoot: true }) as Reducer,
+      state = {
+        foo: {
+          bar: 'bar',
+        },
+        baz: {
+          fox: 'a brown fox',
+        },
+      };
+
+    expect(reducer(state, updateAction())).toEqual({
+      foo: {
+        bar: 'bar updated',
+      },
+      baz: {
+        fox: 'a brown fox updated + bar updated',
       },
     });
   });

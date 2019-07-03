@@ -10,7 +10,6 @@ const wrapSelectorReducer = (dependencyMap: DependencyMap<DiSelector>, reducer) 
     return reducer(s, a, d);
   }
 
-  // TODO: correct error message
   if (!isObj(d)) {
     throw new ReduxDiError('Invalid dependencies given to diReducer(). Expecting non-empty object.');
   }
@@ -26,13 +25,18 @@ const wrapSelectorReducer = (dependencyMap: DependencyMap<DiSelector>, reducer) 
 
   // TODO: see todo above
   const finalDependencies = Object.keys(d).reduce(
-    (acc, k) => (
-      dependencyMap[k] === undefined
-        ? acc
-        : Object.assign(acc, {
-          [k]: dependencyMap[k].select(d[k]),
-        })
-    ),
+    (acc, k) => {
+      if (dependencyMap[k] === undefined) {
+        return acc;
+      }
+
+      // TODO: think how to solve this in better way ..
+      const dVal = k.indexOf('.') > -1 ? d[k] : dependencyMap[k].select(d[k]);
+
+      return Object.assign(acc, {
+        [k]: dVal,
+      });
+    },
     {},
   );
 
