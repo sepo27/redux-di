@@ -112,4 +112,34 @@ describe('root combineReducers', () => {
       },
     });
   });
+
+  // TODO
+  xit('resolves nested absolute path with string selector', () => {
+    const
+      reducer = combineReducers({
+        foo: combineReducers({
+          bar: strUpdateTR(),
+        }),
+        baz: combineReducers({
+          fox: diReducer({ bar: '@foo.bar' }, strUpdateDiTR('bar')),
+        }),
+      }, { isRoot: true }) as Reducer,
+      state = {
+        foo: {
+          bar: 'bar',
+        },
+        baz: {
+          fox: 'a brown fox',
+        },
+      };
+
+    expect(reducer(state, updateAction())).toEqual({
+      foo: {
+        bar: 'bar updated',
+      },
+      baz: {
+        fox: 'a brown fox updated + bar updated',
+      },
+    });
+  });
 });
