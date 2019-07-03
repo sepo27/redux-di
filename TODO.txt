@@ -27,3 +27,5 @@ expect(reducer(state, action, deps)).toEqual(...);
 {code}
 
 - Remove _reducers
+
+- Remove duplicate code in lib
