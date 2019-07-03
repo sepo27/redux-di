@@ -18,7 +18,7 @@ describe('appSel', () => {
     expect(sel({ foo: { bar: 'the value' } })).toEqual('the value');
   });
 
-  xit('spawns nested selector', () => {
+  it('spawns nested selector', () => {
     const
       fooSel = appSel(['foo']),
       fooBarSel = fooSel.spawn(['bar']);
