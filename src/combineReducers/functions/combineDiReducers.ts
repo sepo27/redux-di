@@ -74,14 +74,22 @@ export const combineDiReducers = <S extends MapS<any>, A extends Action = AnyAct
                 if (dSelector.isRelative || (options.isRoot && dSelector.isAbsolute)) {
                   const dProp = dSelector.path[0];
 
-                  let dValue;
+                  let nextDValue;
+
                   if (resolvedValues[dProp] === undefined) {
-                    dValue = setResolvedValue(dProp, resolvePropState(dProp));
+                    // TODO: set d initial state here instead of null
+                    const dValue = state === undefined ? null : null; // TODO
+
+                    if (dSelector.predicate({ dependency: dValue, action })) {
+                      nextDValue = setResolvedValue(dProp, resolvePropState(dProp));
+                    } else {
+                      nextDValue = setResolvedValue(dProp, dValue);
+                    }
                   } else {
-                    dValue = resolvedValues[dProp];
+                    nextDValue = resolvedValues[dProp];
                   }
 
-                  return Object.assign(acc, { [dName]: dValue });
+                  return Object.assign(acc, { [dName]: nextDValue });
                 }
 
                 if (dSelector.isAbsolute) {

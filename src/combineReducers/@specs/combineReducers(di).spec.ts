@@ -340,6 +340,37 @@ describe('combineReducers', () => {
     });
   });
 
+  it('resolves circular dependencies initial states', () => {
+    const
+      reducer = combineReducers({
+        foo: diReducer(
+          'initial foo',
+          {
+            bar: '.bar',
+          },
+          strUpdateDiTR('bar'),
+        ),
+        bar: diReducer(
+          'initial bar',
+          {
+            foo: new DiSelector('.foo', {
+              predicate: ({ dependency, action }) => (
+                dependency === 'the bar' && action.type === UPDATE_ACTION
+              ),
+            }),
+          },
+          strUpdateDiTR('foo'),
+        ),
+      }) as Reducer,
+      state = undefined,
+      action = updateAction();
+
+    expect(reducer(state, action)).toEqual({
+      foo: 'initial foo',
+      bar: 'initial bar',
+    });
+  });
+
   xit('resolves circular dependencies via predicate', () => {
     const
       reducer = combineReducers({

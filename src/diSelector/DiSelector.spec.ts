@@ -139,7 +139,14 @@ describe('DiSelector.toString()', () => {
 describe('DiSelector with predicate', () => {
   it('initializes default truthy predicate', () => {
     const selector = new DiSelector('@foo');
-    expect(selector.predicate({ dependency: 'bar', action: dummyAction() })).toBe(true);
+    expect(selector.predicate({ dependency: 'dummy', action: dummyAction() })).toBe(true);
+  });
+
+  it('initializes default truthy predicate when passing selector', () => {
+    const selector = new DiSelector('@foo', {
+      select: v => v,
+    });
+    expect(selector.predicate({ dependency: 'dummy', action: dummyAction() })).toBe(true);
   });
 
   it('is constructed with custom predicate', () => {

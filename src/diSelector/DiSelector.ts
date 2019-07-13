@@ -29,7 +29,12 @@ export class DiSelector {
 
   private pathPrefix: string;
 
-  constructor(path: ComboPath, { select, predicate }: DiSelectorOptions = DiSelectorDefaultOptions) {
+  constructor(path: ComboPath, inOptions: DiSelectorOptions = {}) {
+    const { select, predicate } = {
+      ...DiSelectorDefaultOptions,
+      ...inOptions,
+    };
+
     if (!path.length) {
       throw new ReduxDiError('Empty path given to DiSelector');
     }
@@ -51,7 +56,6 @@ export class DiSelector {
     }
 
     this.select = select;
-
     this.predicate = predicate;
   }
 
