@@ -355,7 +355,7 @@ describe('combineReducers', () => {
           {
             foo: new DiSelector('.foo', {
               predicate: ({ dependency, action }) => (
-                dependency === 'the bar' && action.type === UPDATE_ACTION
+                dependency.dummy === 'the bar' && action.type === UPDATE_ACTION
               ),
             }),
           },
