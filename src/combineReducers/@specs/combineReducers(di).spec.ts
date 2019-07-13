@@ -339,4 +339,36 @@ describe('combineReducers', () => {
       foo: 2,
     });
   });
+
+  xit('resolves circular dependencies via predicate', () => {
+    const
+      reducer = combineReducers({
+        foo: diReducer(
+          {
+            bar: '.bar',
+          },
+          strUpdateDiTR('bar'),
+        ),
+        bar: diReducer(
+          {
+            foo: new DiSelector('.foo', {
+              predicate: ({ dependency, action }) => (
+                dependency === 'the bar' && action.type === UPDATE_ACTION
+              ),
+            }),
+          },
+          strUpdateDiTR('foo'),
+        ),
+      }) as Reducer,
+      state = {
+        foo: 'foo',
+        bar: 'bar',
+      },
+      action = updateAction();
+
+    expect(reducer(state, action)).toEqual({
+      foo: 'foo update + bar updated + foo',
+      bar: 'bar update + foo',
+    });
+  });
 });
