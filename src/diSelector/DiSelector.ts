@@ -27,10 +27,6 @@ export class DiSelector {
       this.pathPrefix = path[0][0]; // eslint-disable-line prefer-destructuring
     }
 
-    if (!this.path.length) {
-      throw new ReduxDiError('Empty path given to DiSelector');
-    }
-
     if (this.pathPrefix === '@') {
       this.isAbsolute = true;
     } else if (this.pathPrefix === '.') {
