@@ -1,14 +1,19 @@
 import { ArrPath, ComboPath, isArrPath, isStrPath, toArrPath, toStrPath } from '../utils/path'; // eslint-disable-line no-unused-vars
-import { ReduxDiError } from '../utils/ReduxDiError'; // eslint-disable-line no-unused-vars
+import { ReduxDiError } from '../utils/ReduxDiError';
+import { AnyAction } from '../types'; // eslint-disable-line no-unused-vars
 
 type DiSelectorSelect = (val: any) => any;
 
+type DiSelectorPredicate = ({ dependency: any, action: AnyAction }) => boolean;
+
 type DiSelectorOptions = {
   select?: DiSelectorSelect,
+  predicate?: DiSelectorPredicate,
 };
 
 const DiSelectorDefaultOptions: DiSelectorOptions = {
   select: d => d,
+  predicate: () => true,
 };
 
 export class DiSelector {
@@ -20,9 +25,11 @@ export class DiSelector {
 
   readonly select: DiSelectorSelect;
 
+  readonly predicate: DiSelectorPredicate;
+
   private pathPrefix: string;
 
-  constructor(path: ComboPath, { select }: DiSelectorOptions = DiSelectorDefaultOptions) {
+  constructor(path: ComboPath, { select, predicate }: DiSelectorOptions = DiSelectorDefaultOptions) {
     if (!path.length) {
       throw new ReduxDiError('Empty path given to DiSelector');
     }
@@ -44,6 +51,8 @@ export class DiSelector {
     }
 
     this.select = select;
+
+    this.predicate = predicate;
   }
 
   toString(): string {

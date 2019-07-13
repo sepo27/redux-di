@@ -1,5 +1,6 @@
 import { DiSelector } from './DiSelector';
 import { ReduxDiError } from '../utils/ReduxDiError';
+import { dummyAction, UPDATE_ACTION, updateAction } from '../../tests/actions';
 
 describe('DiSelector resolves absolute', () => {
   it('str path', () => {
@@ -132,5 +133,23 @@ describe('DiSelector.toString()', () => {
   it('from arr path', () => {
     const selector = new DiSelector(['.foo', 'bar']);
     expect(selector.toString()).toBe('.foo.bar');
+  });
+});
+
+describe('DiSelector with predicate', () => {
+  it('initializes default truthy predicate', () => {
+    const selector = new DiSelector('@foo');
+    expect(selector.predicate({ dependency: 'bar', action: dummyAction() })).toBe(true);
+  });
+
+  it('is constructed with custom predicate', () => {
+    const
+      selector = new DiSelector('@foo', {
+        predicate: ({ dependency, action }) => (
+          dependency === 'bar' && action.type === UPDATE_ACTION
+        ),
+      });
+
+    expect(selector.predicate({ dependency: 'bar', action: updateAction() })).toBe(true);
   });
 });
