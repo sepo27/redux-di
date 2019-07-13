@@ -255,7 +255,7 @@ describe('combineReducers', () => {
 
   it('resolves multiple di with selectors', () => {
     const
-      barSelector = new DiSelector('.bar', bar => bar.val),
+      barSelector = new DiSelector('.bar', { select: bar => bar.val }),
       reducer = combineReducers({
         bar: diReducer({ foo: '.foo' }, (s, a, d) => (
           a.type === UPDATE_ACTION
@@ -289,7 +289,7 @@ describe('combineReducers', () => {
         )),
         foo: strUpdateTR(),
         baz: diReducer(
-          { bar: new DiSelector('.bar', bar => bar.val) },
+          { bar: new DiSelector('.bar', { select: bar => bar.val }) },
           strUpdateDiTR('bar'),
         ),
       }),

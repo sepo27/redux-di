@@ -68,7 +68,7 @@ describe('diReducer', () => {
           baz: 'baz updated',
         },
       },
-      selector = new DiSelector('@bar', bar => bar.baz),
+      selector = new DiSelector('@bar', { select: bar => bar.baz }),
       reducer = diReducer({ baz: selector }, strUpdateDiTR('baz')),
       nextState = reducer(state, updateAction(), deps);
 

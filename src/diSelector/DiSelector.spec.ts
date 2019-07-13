@@ -77,7 +77,9 @@ describe('DiSelector selects with', () => {
   });
 
   it('custom selector', () => {
-    const selector = new DiSelector('@foo.bar', val => val.baz.fox);
+    const selector = new DiSelector('@foo.bar', {
+      select: val => val.baz.fox,
+    });
 
     expect(selector.select({ baz: { fox: 'val' } })).toEqual('val');
   });

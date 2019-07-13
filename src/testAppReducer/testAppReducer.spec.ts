@@ -110,7 +110,7 @@ describe('testAppReducer', () => {
           foo: diReducer(
             '',
             {
-              baz: new DiSelector('@bar', d => d.baz),
+              baz: new DiSelector('@bar', { select: d => d.baz }),
             },
             strUpdateDiTR('baz'),
           ),

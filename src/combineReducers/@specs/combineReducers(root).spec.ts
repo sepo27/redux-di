@@ -88,7 +88,7 @@ describe('root combineReducers', () => {
         baz: combineReducers({
           fox: diReducer(
             {
-              bar: new DiSelector('@foo', foo => foo.bar),
+              bar: new DiSelector('@foo', { select: foo => foo.bar }),
             },
             strUpdateDiTR('bar'),
           ),

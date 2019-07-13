@@ -3,6 +3,14 @@ import { ReduxDiError } from '../utils/ReduxDiError'; // eslint-disable-line no-
 
 type DiSelectorSelect = (val: any) => any;
 
+type DiSelectorOptions = {
+  select?: DiSelectorSelect,
+};
+
+const DiSelectorDefaultOptions: DiSelectorOptions = {
+  select: d => d,
+};
+
 export class DiSelector {
   readonly path: ArrPath;
 
@@ -14,7 +22,7 @@ export class DiSelector {
 
   private pathPrefix: string;
 
-  constructor(path: ComboPath, select: DiSelectorSelect = val => val) {
+  constructor(path: ComboPath, { select }: DiSelectorOptions = DiSelectorDefaultOptions) {
     if (!path.length) {
       throw new ReduxDiError('Empty path given to DiSelector');
     }
