@@ -371,7 +371,7 @@ describe('combineReducers', () => {
     });
   });
 
-  xit('resolves circular dependencies via predicate', () => {
+  it('resolves circular dependencies via predicate', () => {
     const
       reducer = combineReducers({
         foo: diReducer(
@@ -398,8 +398,8 @@ describe('combineReducers', () => {
       action = updateAction();
 
     expect(reducer(state, action)).toEqual({
-      foo: 'foo update + bar updated + foo',
-      bar: 'bar update + foo',
+      foo: 'foo updated + bar updated + foo',
+      bar: 'bar updated + foo',
     });
   });
 });
